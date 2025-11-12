@@ -12,15 +12,15 @@ format:
 natbiboptions: numbers
 # EDIT AT YOUR OWN PERIL #
 
-title: Senior Thesis Title
+title: PathMaker A tool for analyzing,developing and benchmarking Path-finding algorithms
 
-firstreader: First Reader
-secondreader: Second Reader
+firstreader: Dr.Janyl Jumadinova
+secondreader: Dr.Gregory Kapfhammer
 
 bibliography: references.bib
 
 author:
-  - name: A. Student
+  - name: Preston Smith
     affiliation:
       name: Allegheny College
       address: 520 N. Main St., Box Q
