@@ -33,12 +33,6 @@ Currently there are things like path-finding visualizers that you can find onlin
 
 Game Engines like Unreal, Godot, Unity and others are often used as testbeds for path-finding algorithms as they can provide bench marking and the ability to create and control there own environments. However this isn't there main purpose and game engines can be difficult to use especially something like unreal. This leads to an issue where a tool isn't powerful enough to be used as a proper way to analyze something or it's has a major learning curve on how to create a map and implement code as a result of it having a broader purpose and not being focus on analyzing path-finding algorithms.
 
-- There are visualizers
-
-- Game Engines have similar functions
-
-- Videogames are often used as a test bed for Pathfinding
-
 ## Goals of the Project
 
 The goal of this project is to make a functional and robust tool that as said before allows for the creation of 2D grid based maps. The abilities to modify and save maps is Important in order for users to accurately represent the environment they want to use a path-finding algorithm in.
@@ -50,26 +44,22 @@ Overall this tool should give an easy to understand and in-depth analysis of a p
 While a lot of these functions can already be achieve to some extent with other tools such as game engines as mentioned before they are not specifically designed with path-finding solely in mind. While they're a suitable test bed there's an additional learning curve in how to design and create maps and how to actually implement a program with in the engines. This learning curve varies depending on the engine as something like Godot is inherently simpler then Unreal but there still is a large amount of functionality and complexity in the map creation. Along with actually implementing a program can lead to a confusing experience. 
 
 
-
-- Create a tool that visualizes maps and algorithms allowing the creation, editing and saving of maps
-
-- Allow the implementation of modified pathfinding algorithms and commonly use ones i.e. A*, dijkstra as well
-
-- Give a easy to understand analysis of the algorithms performance that is comprehensive while using industry standard techniques for evaluating pathfinding.
-
 ## Ethical Implications
 
-- The results need to be accurate and trustworthy
 
-    * Can mitigate by substantial testing and research
-    * Making sure to use industry standard practices which have already been proven
+### Accuracy
+
+It's important for this tool to work properly and accurately. If it doesn't provide accurate information with tested and researched methods it runs the risk of given untrustworthy data and results. This tool whole purpose relies on accurate results and if it's not accurate it fails it's purpose so it needs to be thoroughly tested and needs to use well researched methods when it comes to analyzing path-finding algorithms.
+
+### Transparency
+
+Since this is a tool made by one person and not a professional product or application it's important to acknowledge that this tool isn't going to be perfect it's going to have issues. There may be some mistakes when it comes to analysis it may have performance issues. There may be parts of the tool that are more flaky then others so being transparent about what the issues are and where bugs are important for keeping this tool reliable and informing people on how it should be used.
+
+### Security
+
+There is also the issue of having it as a downloadable binary this could pose a security risk to people computers the download needs to be secure or it can run the risk of installing malware. If it's on github if github ever has a security breach then the tool could be compromised and could be modified without permission. This is a cause for concern but given the circumstance there's little work around for the situation. I wouldn't be able to make something more secure than github downloads by myself.
 
 
-- Evaluating the tools itself could be bias
+### Accessibility
 
-    * Have other people take a look at who understand this topic to help determine if there is bias
-    * Have random elements to the testing of the tool so it's not completely controlled by the developer.
-
-- Security Risk
-
-    * As the plan is to have this as an installable binary the method of installation could pose security risks to people as it may install something unwanted on someones computer or something not computable with there computable 
+Since this tool is an application it needs to accessibility options for those who are visually impaired or mechanically impaired so having keyboard shortcuts, font setting to change font sizes and font style is important to ensure as many people are able to use the tool as possible. Having the option for color-blind colors is also a consideration but the goal of the tool is to mostly use neutral colors to try and limit the amount of changes the tool would need.
