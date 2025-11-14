@@ -1,10 +1,11 @@
 ---
-title: "Activity template post"
-date: "2024-08-29"
+title: "Map Creator Implemented"
+image: PathMaker-Demo.jpg
+date: "2024-11-12"
 ---
 
-This is the first post in a Quarto blog. Welcome!
+![](PathMaker-Demo.jpg)
 
-![](thumbnail.jpg)
+I have fully implemented the ability to create, edit and save maps. There are currently some features that are missing the file System doesn't currently scan you're whole computer and there is not way to change the board size and amount of tiles. You also can't currently choose the name of the json file the map is saved too. This will all be implemented in the future.
 
-Since this post doesn't specify an explicit `image`, the first image in the post will be used in the listing page of posts.
+I want to work on how users will implement an algorithm as I surmise that will probably be the hardest part of the tool to implement and may require the creation of a rust crate that connect with tool directly or having a development environment directly in the tool. There also may be a way to use a text editor like VScode or vim and set up an environment in those tools.
