@@ -1,5 +1,5 @@
 ---
-title: "ReadyResearchers Template"
+title: "PathMaker Benchmarking"
 listing:
   - id: posts
     contents:
