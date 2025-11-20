@@ -1,15 +1,58 @@
 # Introduction
 
+
+**Feedback**
+It would be better if you started with a gentle intro to or mention of path finding in the first paragraph, and then get into what your project is about in the second paragraph or in the middle of the first paragraph, instead of jumping directly into it. It will help with clarity.
+
+
+- Don't use future tense.
+- Define all jargon (NavMesh, AI, benchmarking) when you first mention it.
+- It is supposed to be a scientific paper. Your writing so far is too informal.
+- Every claim you make needs to be cited.
+
+
+- "2.2 Current State of the Art"( I would go a little more in depth)
+- "2.3 Goals of the Project"(expand more on this)
+- "2.4.1 Accuracy"(this should be most important , more clarification and explanation would help)
+
+**Feedback**
+
+
+
+## What is My PathFinding?
+
+As my project revolves around path-finding it's important that we start there. So, what actually is path-finding? Path-finding is a program designed to find a path between two points or multiple points facets of it are used in many different industries such as in GPS like google maps or ways, In video-games to control the movement of NPCs(non playable character ) and objects, There even used in AI or Artificial Intelligence to help it make decisions in many different circumstance find the path of least resistance to achieving it's goal whatever it may be.
+
+When Evaluating path-finding algorithm the algorithm you choose is important but just is important is how the algorithm gives information in things with a 3D environment like video-games something like a NavMesh is used. (Talk About nav meshes). This tool is focused and grid based path-finding so the information is represented as a graphs with obstacles, the starting point and the goal all being represented as a coordinate. In a grid based system there is no differing values for move so in something like google maps it may pick a route based on fuel consumed and not overall distance as it may have less distance but if it's more uphill you're car uses more fuel making it not fuel efficient but less of a distance. 
+
+### A* Algorithm
+
+
+![Depth First Tree @DepthFig](images/256px-Depth-first-tree.svg.png)
+
+Thing's like **A-Star** which is an algorithm to find the shortest path between a start and a specified goal. It does this by taking an estimate how long the shortest path. **A-Star** at it's base is a depth first search meaning so what does this actually mean if you think of a graph and pick a point on the graph all of the points directly around that point would be considered a a child of that point. Those children then also have children depth first search means instead of searching all the points directly next to the point it picks one of the children and searches there and it repeats until it gets to the end of the tree or when there are no more possible moves on that branch. **A-Star** Has an extra step it takes the estimated path-distance and compares it to the nodes it then assigns each node a value based on how much it estimates the path to be if it picks that node It then selects the node with the lowest value to search first[@AStarSearch].
+
+### Djikstra Algorithm
+
+should be this and Djikstra and a lot of the more fundamental algorithms can still be used in this situation the states or weight of an action just need to be evaluated differently and the way information is provided is different.
+
+## What is My Project
+
 This project aims to create a tool that easy to use and understand to help in the development and analysis of path finding algorithms. The tool has the ability to create,edit, generate and save maps. This is so the user can create there own maps for the path-finding algorithm and generate different scenarios based on that baseline map given. The idea is to be able to test the algorithm for a persons specific use case and then give different situations and see how it performs and where it may be lacking.
 The program analyzes the results through benchmarking by tracking things like starting distance from goal, steps taken to reach goal, steps to get a result and memory usage. It will then store this information and display it for analysis. The hope for this project is that it makes testing and analyzing path-finding algorithms easier and to have a dedicated tool to that purpose instead of using a secondary feature of something like a game engine or having to make you're own testing environment.
 
-With all that said what actually is path-finding? Path-finding is a program designed to find a path between two points or multiple points facets of it are used in many different industries such as in GPS like google maps or ways, In video-games to control the movement of NPCs(non playable character ) and objects, There even used in AI to help it make decisions in many different circumstance find the path of least resistance to achieving it's goal whatever it may be.
-
-When Evaluating path-finding algorithm the algorithm you choose is important but just is important is how the algorithm gives information in things with a 3D environment like video-games something like a NavMesh is used. (Talk About nav meshes). This tool is focused and grid based path-finding so the information is represented as a graphs with obstacles, the starting point and the goal all being represented as a coordinate. In a grid based system there is no differing values for move so in something like google maps it may pick a route based on fuel consumed and not overall distance as it may have less distance but if it's more uphill you're car uses more fuel making it not fuel efficient but less of a distance. Thing's like A* and Djikstra and a lot of the more fundamental algorithms can still be used in this situation the states or weight of an action just need to be evaluated differently and the way information is provided is different.
-
 There are also weighted grids which have different values depending on a coordinate. In a normal grid moving one space over can simply be represented by 1 no matter where it is on the grid. Weighted grids differ as moving one space over may have a cost of 2 or 3 or any number depending on how the weighted grid is set up. There are also situations where theres a dynamic environment where the map is always changing or the location the algorithm is trying to navigate is always changing think of something like self driving car or a Roomba. This things normally have a set path they follow but need to to be able to react to changes in the environment so it doesn't crash or in the a more minor case a Roomba runs into someone leg. In this situation just using one algorithm doesn't work it needs to be able to react to a changing environment. Then there's also situations with multiple agents where they need to avoid colliding with each other but aim to achieve the same goal.
 
+### Probabilistic Maps
+
+![Probabilistic Map Figure @s22228983](images/PM-Figure.jpg)
+
 Another way information can be represent is a probabilistic map. Where a map is generated by take multiple different nodes placing it someone where on the map. It then will check if the node is within an obstacle space if it isn't it keeps and attempts to connect to other viable nodes. It does this by finding a path through another pathfinding algorithm like Djikstra or A* and checks if that line collides with a Obstacle at any point. It does this multiple times until it has a comprehensive map of nodes with paths connecting each one to each other without colliding with an obstacle. This allows every possible movements path to already been calculated and you use another algorithm called a path planner to know which nodes to go to to get to a specified destination.
+
+
+### Navigation Mesh
+
+![Navigation Map Figure @BRANDSANDYTHESIS](images/nav-mesh-figure.jpg)
 
 The type of algorithm you want to use and whether you want to use a navigation mesh or a probabilistic map, or simply to a straight algorithm depends on the need and resources available for the project. A nav mesh represents the walkable areas as polygons and connects these areas together using A* to help create paths calculating much smaller paths in subsections of the map instead trying to calculate the whole map at once. Probabilistic maps are very similar but instead of being represented by polygons it's individual node and each node tries to connect to each other and tries to find paths without colliding with each other
 
@@ -29,6 +72,13 @@ There is also the fact that while a lot of individuals and companies may used a 
 
 ## Current State of the Art
 
+**Feedback**
+Add a figure Here
+
+In the section " Current State of the Art" adding more in regard to "path-finding visualizers" would be helpful to show more about what is currently out there a visualizer or reference image.
+
+**Feedback**
+
 Currently there are things like path-finding visualizers that you can find online these are mostly for education purposes and given a visualization on how these algorithms actually work and find the pat. These often don't have any benchmarking capability and if they do it's simply tracking time to find path. They are also often very finnicky and unresponsive but that is a more of a result as a lot of them just being fun side projects of someones and not being a professionally made tool. 
 
 Game Engines like Unreal, Godot, Unity and others are often used as testbeds for path-finding algorithms as they can provide bench marking and the ability to create and control there own environments. However this isn't there main purpose and game engines can be difficult to use especially something like unreal. This leads to an issue where a tool isn't powerful enough to be used as a proper way to analyze something or it's has a major learning curve on how to create a map and implement code as a result of it having a broader purpose and not being focus on analyzing path-finding algorithms.
@@ -45,6 +95,10 @@ While a lot of these functions can already be achieve to some extent with other 
 
 
 ## Ethical Implications
+
+**Feedback**
+No assumptions are addressed. Talk about the assumptions you are making, what does your tool rely on, how could that limit its development or functionality?
+**Feedback**
 
 
 ### Accuracy
