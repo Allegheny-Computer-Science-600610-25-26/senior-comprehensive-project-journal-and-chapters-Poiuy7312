@@ -9,15 +9,55 @@
   publisher={IOS Press}
 }
 
-
 @article{BAILEY2021103560,
-title = {Path-length analysis for grid-based path planning},
-journal = {Artificial Intelligence},
-volume = {301},
-pages = {103560},
-year = {2021},
-issn = {0004-3702},
-doi = {https://doi.org/10.1016/j.artint.2021.103560},
-url = {https://www.sciencedirect.com/science/article/pii/S0004370221001119},
-author = {James P. Bailey and Alex Nash and Craig A. Tovey and Sven Koenig}
+  title={Pathlength analysis for grid-based path planning},
+  author={James P. Bailey, Alex Nash, Craig A. Tovey, Sven Koenig},
+  journal={Artificial Intelligence},
+  volume={301},
+  pages={103-560},
+  year={2021}
+}
+
+@thesis{BRANDSANDYTHESIS,
+  title={Efficient obstacle avoidance using
+autonomously generated navigation meshes},
+  author={Sandy Brand},
+  type={Master's Thesis},
+  school={Delft University of Technology},
+  year={2009}
+}
+
+
+@Article{s22228983,
+AUTHOR = {Qiao, Lijun and Luo, Xiao and Luo, Qingsheng},
+TITLE = {An Optimized Probabilistic Roadmap Algorithm for Path Planning of Mobile Robots in Complex Environments with Narrow Channels},
+JOURNAL = {Sensors},
+VOLUME = {22},
+YEAR = {2022},
+NUMBER = {22},
+ARTICLE-NUMBER = {8983},
+URL = {https://www.mdpi.com/1424-8220/22/22/8983},
+PubMedID = {36433584},
+ISSN = {1424-8220},
+ABSTRACT = {In this paper, we propose a new path planning algorithm based on the probabilistic roadmaps method (PRM), in order to effectively solve the autonomous path planning of mobile robots in complex environments with multiple narrow channels. The improved PRM algorithm mainly improves the density and distribution of sampling points in the narrow channel, through a combination of the learning process of the PRM algorithm and the APF algorithm. We also shortened the required time and path length by optimizing the query process. The first key technology to improve the PRM algorithm involves optimizing the number and distribution of free points and collision-free lines in the free workspace. To ensure full visibility of the narrow channel, we extend the obstacles through the diagonal distance of the mobile robot while ignoring the safety distance. Considering the safety distance during movement, we re-classify the all sampling points obtained by the quasi-random sampling principle into three categories: free points, obstacle points, and adjacent points. Next, we transform obstacle points into the free points of the narrow channel by combining the APF algorithm and the characteristics of the narrow channel, increasing the density of sampling points in the narrow space. Then, we include potential energy judgment into the construction process of collision-free lines shortening the required time and reduce collisions with obstacles. Optimizing the query process of the PRM algorithm is the second key technology. To reduce the required time in the query process, we adapt the bidirectional A* algorithm to query these local paths and obtain an effective path to the target point. We also combine the path pruning technology with the potential energy function to obtain a short path without collisions. Finally, the experimental results demonstrate that the new PRM path planning technology can improve the density of free points in narrow spaces and achieve an optimized, collision-free path in complex environments with multiple narrow channels.},
+DOI = {10.3390/s22228983}
+}
+
+
+@ARTICLE{AStarSearch,
+  author={Hart, Peter E. and Nilsson, Nils J. and Raphael, Bertram},
+  journal={IEEE Transactions on Systems Science and Cybernetics}, 
+  title={A Formal Basis for the Heuristic Determination of Minimum Cost Paths}, 
+  year={1968},
+  volume={4},
+  number={2},
+  pages={100-107},
+  keywords={Costs;Mathematical programming;Minimization methods;Functional programming;Automatic control;Minimax techniques;Gradient methods;Chemical technology;Automatic programming;Instruction sets},
+  doi={10.1109/TSSC.1968.300136}
+}
+
+@Misc{DepthFig,
+  author={Alexander Drichel},
+  title={Depth-first-tree},
+  year={2008}
 }
