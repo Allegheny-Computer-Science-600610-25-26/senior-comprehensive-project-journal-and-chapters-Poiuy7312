@@ -19,7 +19,7 @@ It would be better if you started with a gentle intro to or mention of path find
 
 
 
-## What is My PathFinding?
+## What is PathFinding?
 
 As my project revolves around path-finding it's important that we start there. So, what actually is path-finding? Path-finding is a program designed to find a path between two points or multiple points facets of it are used in many different industries such as in GPS like google maps or ways, In video-games to control the movement of NPCs(non playable character ) and objects, There even used in AI or Artificial Intelligence to help it make decisions in many different circumstance find the path of least resistance to achieving it's goal whatever it may be.
 
@@ -58,6 +58,25 @@ The type of algorithm you want to use and whether you want to use a navigation m
 
 This tool will only be working with a 2D grid. One because it's the easiest to implement and for the purposes of analyzing a path-finding algorithm. Probabilistic Maps and Nav-meshes are generated from path-finding algorithms and stored for later in a static environment like a video-game map.
 
+
+## Current State of the Art
+
+![Visualizer-Figure @ClémentMihailescu2016](images/Vizualiser-Figure.jpg)
+
+
+### Visualizers
+
+Currently there are things like path-finding visualizers that you can find online these are mostly for education purposes and given a visualization on how these algorithms actually work and find the pat. These often don't have any benchmarking capability and if they do it's simply tracking time to find path. They are also often very finnicky and unresponsive but that is a more of a result as a lot of them just being fun side projects of someones and not being a professionally made tool. 
+
+
+### Game Engines
+
+Game Engines like Unreal, Godot, Unity and others are often used as testbeds for path-finding algorithms as they can provide bench marking and the ability to create and control there own environments. However this isn't there main purpose and game engines can be difficult to use especially something like unreal. This leads to an issue where a tool isn't powerful enough to be used as a proper way to analyze something or it's has a major learning curve on how to create a map and implement code as a result of it having a broader purpose and not being focus on analyzing path-finding algorithms.
+
+### MultiMedia API
+
+There are also API's such as SDL/SDL2/SDl3 and something like Microsoft DirectX which are are libraries built for interacting with a computers hardware to display images, create windows, play sound and track inputs. These are often used to make simple and high-performance games directly while also often being used as an important component for more complex and powerful game engines[@SDLSITE].
+
 ## Motivation
 
 So why even make something like this and why is it important? When developing or trying to create a modified version of an existing algorithm i.e. A* developers and researchers often use video-games as a test bed and there engines to implement the algorithm and test it's performance. This can result in a steep learning curve in understanding the engine and doesn't normally have extensive benchmarking built in to it and isn't focused solely on the algorithm itself. While game engines do provide a great environment to test path-finding algorithms they aren't solely built for it so a lot of the analysis has to be done by the developer themselves using known techniques. My program aims to be easy to use and give extensive data on the performance of these algorithms by not testing them on a singular map but by giving it multiple different circumstance's tracking what those differences are and how it performs to help come up with how this an algorithm succeeds and it's it's shortcomings and if it's a good fit for the problem you're trying to solve whether it's finding routes on a real life map or trying to control AI in games to have affective path-finding these require different types algorithms with trade offs and my tool hopes to make this process easier.
@@ -70,18 +89,6 @@ Every path-finding algorithm has pro's and con's and is useful in different situ
 
 There is also the fact that while a lot of individuals and companies may used a pre-made fully fledged out game engine they may decide to make there own engine or use something like Microsoft XNA or SDL. Which are primarily for making games but they don't have the fool features of a game engine and a built in work environment there mostly just tools that help with displays and game logic. So they have to set up there own testing environment for path-finding and if they wanted to use an Engine like unreal features they would have to set up everything again in that engine which is not worth doing. A tool that is easy to use and can easily set up and environment and implementing a algorithm will help make these decisions earlier on without having to fully set up and environment before hand. While it won't give as good of an understanding as running it in the actual game someone is creating it can give an idea for the direction a developer may wan't to take.
 
-## Current State of the Art
-
-**Feedback**
-Add a figure Here
-
-In the section " Current State of the Art" adding more in regard to "path-finding visualizers" would be helpful to show more about what is currently out there a visualizer or reference image.
-
-**Feedback**
-
-Currently there are things like path-finding visualizers that you can find online these are mostly for education purposes and given a visualization on how these algorithms actually work and find the pat. These often don't have any benchmarking capability and if they do it's simply tracking time to find path. They are also often very finnicky and unresponsive but that is a more of a result as a lot of them just being fun side projects of someones and not being a professionally made tool. 
-
-Game Engines like Unreal, Godot, Unity and others are often used as testbeds for path-finding algorithms as they can provide bench marking and the ability to create and control there own environments. However this isn't there main purpose and game engines can be difficult to use especially something like unreal. This leads to an issue where a tool isn't powerful enough to be used as a proper way to analyze something or it's has a major learning curve on how to create a map and implement code as a result of it having a broader purpose and not being focus on analyzing path-finding algorithms.
 
 ## Goals of the Project
 
@@ -99,6 +106,8 @@ While a lot of these functions can already be achieve to some extent with other 
 **Feedback**
 No assumptions are addressed. Talk about the assumptions you are making, what does your tool rely on, how could that limit its development or functionality?
 **Feedback**
+
+### Assumptions
 
 
 ### Accuracy
