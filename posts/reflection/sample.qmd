@@ -1,9 +1,11 @@
 ---
-title: "Sample reflection post"
+title: "PathMaker Intro Presentation Reflection"
+image: PathMaker-IntroIMG.jpg
 date: "2025-08-29"
 ---
 
-![Image post thumbnail](thumbnail.jpg)
+![Image post thumbnail](PathMaker-IntroIMG.jpg)
 
-Students complete these posts in response to various reflective prompts introduced
-throughout the semester.
+Overall I think the Presentation went pretty well. I was a little but worried I might not have enough to talk about but looking back at my junior sem presentation helped me think about things I could add and talk about. I do think I could have made it a little more clear what the projects goals and target audience was. But other than that I think it went pretty well I don't believe there where any major gaps in the presentation and I covered a little bit of everything.
+
+

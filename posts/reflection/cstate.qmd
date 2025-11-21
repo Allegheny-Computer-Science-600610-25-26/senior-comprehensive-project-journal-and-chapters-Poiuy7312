@@ -1,0 +1,5 @@
+
+
+I have fully implemented the ability to create, edit and save maps. There are currently some features that are missing the file System doesn't currently scan you're whole computer and there is not way to change the board size and amount of tiles. You also can't currently choose the name of the json file the map is saved too. This will all be implemented in the future.
+
+I want to work on how users will implement an algorithm as I surmise that will probably be the hardest part of the tool to implement and may require the creation of a rust crate that connect with tool directly or having a development environment directly in the tool. There also may be a way to use a text editor like VScode or vim and set up an environment in those tools.
