@@ -1,0 +1,69 @@
+---
+title: "Why is it called Pathmaker?"
+image: PathMaker-Demo.jpg
+date: "2024-11-12"
+---
+
+# Justification
+
+I mostly write by originally just writing what comes to mind because I often suffer from getting a writers block and am not sure on what to write about so giving my self a very detailed outline doesn't work super well for outside of telling where I want information tom be located so my outline is pretty basic I try to introduce my project pretty quickly and then explain why it's important and why it's worth doing. After that going into more ethical concerns and assumption about the project I feel was what came after naturally
+
+# Outline
+
+## Introduction
+
+This project aims to create a tool that easy to use and understand to help in the development and analysis of path finding algorithms. The tool has the ability to create,edit, generate and save maps. This is so the user can create there own maps for the path-finding algorithm and generate different scenarios based on that baseline map given. The idea is to be able to test the algorithm for a persons specific use case and then give different situations and see how it performs and where it may be lacking.
+The program analyzes the results through benchmarking by tracking things like starting distance from goal, steps taken to reach goal, steps to get a result and memory usage. It will then store this information and display it for analysis. The hope for this project is that it makes testing and analyzing path-finding algorithms easier and to have a dedicated tool to that purpose instead of using a secondary feature of something like a game engine or having to make you're own testing environment.
+
+With all that said what actually is path-finding? Path-finding is a program designed to find a path between two points or multiple points facets of it are used in many different industries such as in GPS like google maps or ways, In video-games to control the movement of NPCs(non playable character ) and objects, There even used in AI to help it make decisions in many different circumstance find the path of least resistance to achieving it's goal whatever it may be.
+
+When Evaluating path-finding algorithm the algorithm you choose is important but just is important is how the algorithm gives information in things with a 3D environment like video-games something like a NavMesh is used. (Talk About nav meshes). This tool is focused and grid based path-finding so the information is represented as a graphs with obstacles, the starting point and the goal all being represented as a coordinate. In a grid based system there is no differing values for move so in something like google maps it may pick a route based on fuel consumed and not overall distance as it may have less distance but if it's more uphill you're car uses more fuel making it not fuel efficient but less of a distance. Thing's like A* and Djikstra and a lot of the more fundamental algorithms can still be used in this situation the states or weight of an action just need to be evaluated differently and the way information is provided is different.
+
+## Motivation
+
+So why even make something like this and why is it important? When developing or trying to create a modified version of an existing algorithm i.e. A* developers and researchers often use video-games as a test bed and there engines to implement the algorithm and test it's performance. This can result in a steep learning curve in understanding the engine and doesn't normally have extensive benchmarking built in to it and isn't focused solely on the algorithm itself. While game engines do provide a great environment to test path-finding algorithms they aren't solely built for it so a lot of the analysis has to be done by the developer themselves using known techniques. My program aims to be easy to use and give extensive data on the performance of these algorithms by not testing them on a singular map but by giving it multiple different circumstance's tracking what those differences are and how it performs to help come up with how this an algorithm succeeds and it's it's shortcomings and if it's a good fit for the problem you're trying to solve whether it's finding routes on a real life map or trying to control AI in games to have affective path-finding these require different types algorithms with trade offs and my tool hopes to make this process easier.
+
+Having a tool that is easy to use and in depth benchmarking would be very useful as it cuts out a lot of the learning curve for more complex game engines while also providing more in-depth analysis of these algorithms. Benchmarking can help determine is an algorithm you've created or you're wanting to implement is right for your circumstance. For example if I use something like A* while A* is very accurate and fast for how accurate it is, It's not great for a path that changes on the fly so if you want to implement in a more dynamic environment there is a lot of pre-computation time required which is the issue that is often found in 3D video-games and the there use of navigation meshes requiring hours of pre-computation per map before the NPCs or AI is effective at navigating the map. This type of thing isn't an issue for larger companies and is useful in many of these circumstances as once it's computed you don't need to worry about it again. This does however increase file size and may not be Ideal for a smaller project or simpler project. 
+
+For example Terraria a very popular game made by a small Studio doesn't use navigation meshes or a pre-computed pathing. One reason for this is that it can't Terraria generates a unique world when you play meaning it can't compute pathing before hand. Something like minecraft has a Similar issue. So how do these games solve this issue. They often use A* in a limited case they severely limit it's range/depth so it doesn't take to long to take an action. This changes when fighting a boss in these games as they don't want it to be easy to lose the focus of the boss. But with the implementation of A* in these games enemies don't have dynamic behavior and don't fully understand the environment there in making it very easy to trap them as they don't react to changes in the environment. This is fine for normal NPC's but for something like a Boss is an undesirable. Terraria solves this by making all of it's bosses ignore terrain and are flying creatures so they can often just phase through obstacles and just go straight towards the player. Minecraft takes a Similar approach with the EnderDragon boss as it can also phase through obstacles and terrain although it doesn't normally go straight towards the player like bosses in Terraria.
+
+Every path-finding algorithm has pro's and con's and is useful in different situations and deciding which is best for you're situation or using multiple and changing which one is used depending on the situation is very important. Having a tool where you can make you're own maps admittedly in a limited context and being able Implement one of these algorithms or create a modified version you're self well help you make a decision on this without and also gleam a better understanding of these algorithms and how much resources they take, How accurate they are in terms of finding the shortest possible path. How there abilities are effected when in a dynamic environment or the issues and what kind of environments different algorithms thrive in.
+
+There is also the fact that while a lot of individuals and companies may used a pre-made fully fledged out game engine they may decide to make there own engine or use something like Microsoft XNA or SDL. Which are primarily for making games but they don't have the fool features of a game engine and a built in work environment there mostly just tools that help with displays and game logic. So they have to set up there own testing environment for path-finding and if they wanted to use an Engine like unreal features they would have to set up everything again in that engine which is not worth doing. A tool that is easy to use and can easily set up and environment and implementing a algorithm will help make these decisions earlier on without having to fully set up and environment before hand. While it won't give as good of an understanding as running it in the actual game someone is creating it can give an idea for the direction a developer may wan't to take.
+
+## Current State of the Art
+
+Currently there are things like path-finding visualizers that you can find online these are mostly for education purposes and given a visualization on how these algorithms actually work and find the pat. These often don't have any benchmarking capability and if they do it's simply tracking time to find path. They are also often very finnicky and unresponsive but that is a more of a result as a lot of them just being fun side projects of someones and not being a professionally made tool. 
+
+Game Engines like Unreal, Godot, Unity and others are often used as testbeds for path-finding algorithms as they can provide bench marking and the ability to create and control there own environments. However this isn't there main purpose and game engines can be difficult to use especially something like unreal. This leads to an issue where a tool isn't powerful enough to be used as a proper way to analyze something or it's has a major learning curve on how to create a map and implement code as a result of it having a broader purpose and not being focus on analyzing path-finding algorithms.
+
+- There are visualizers
+
+- Game Engines have similar functions
+
+- Videogames are often used as a test bed for Pathfinding
+
+## Goals of the Project
+
+- Create a tool that visualizes maps and algorithms allowing the creation, editing and saving of maps
+
+- Allow the implementation of modified pathfinding algorithms and commonly use ones i.e. A*, dijkstra as well
+
+- Give a easy to understand analysis of the algorithms performance that is comprehensive while using industry standard techniques for evaluating pathfinding.
+
+## Ethical Implications
+
+- The results need to be accurate and trustworthy
+
+    * Can mitigate by substantial testing and research
+    * Making sure to use industry standard practices which have already been proven
+
+
+- Evaluating the tools itself could be bias
+
+    * Have other people take a look at who understand this topic to help determine if there is bias
+    * Have random elements to the testing of the tool so it's not completely controlled by the developer.
+
+- Security Risk
+
+    * As the plan is to have this as an installable binary the method of installation could pose security risks to people as it may install something unwanted on someones computer or something not computable with there computable 
