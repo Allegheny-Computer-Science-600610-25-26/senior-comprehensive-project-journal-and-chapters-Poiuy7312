@@ -1,4 +1,8 @@
-
+---
+title: "PathMaker Progress Reflection"
+image: PathMaker-IntroIMG.jpg
+date: "2025-11-20"
+---
 
 I have fully implemented the ability to create, edit and save maps. There are currently some features that are missing the file System doesn't currently scan you're whole computer and there is not way to change the board size and amount of tiles. You also can't currently choose the name of the json file the map is saved too. This will all be implemented in the future.
 
