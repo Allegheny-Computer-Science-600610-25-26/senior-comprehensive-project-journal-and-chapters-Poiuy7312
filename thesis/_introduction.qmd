@@ -48,25 +48,30 @@ Another way information can be represent is a probabilistic map. Where a map is 
 
 ![Navigation Map Figure @BRANDSANDYTHESIS](images/nav-mesh-figure.jpg)
 
-The type of algorithm you want to use and whether you want to use a navigation mesh or a probabilistic map, or simply to a straight algorithm depends on the need and resources available for the project. A nav mesh represents the walkable areas as polygons and connects these areas together using A* to help create paths calculating much smaller paths in subsections of the map instead of trying to calculate the whole map at once. Probabilistic maps are very similar but instead of being represented by polygons it's individual node and each node tries to connect to each other and tries to find paths without colliding with each other.
+A navigation mesh (NavMesh) is a polygonal representation of walkable regions in a two-dimensional or three-dimensional environment [@BRANDSANDYTHESIS]. Instead of using grid cells a Navmesh represents walkable space into polygons in which a agent can't navigate unobstructed. It will often use a pathfinding algorithm such as A* to run between nodes that represent one of the polygons. These are often in used in videogames as there reduce search complexity and videogames often allow for precomputation for prebuilt maps allowing for less computation when running[@BRANDSANDYTHESIS].
 
 
+#### Scope of This Tool
 
-### Basic 2D Grid
-
-This tool will only be working with a 2D unweighted grid. One because it's the easiest to implement and for the purposes of analyzing a path-finding algorithm. Probabilistic Maps and Nav-meshes are generated from path-finding algorithms and stored for later in a static environment like a video-game map.
+This project focuses exclusively on unweighted, two-dimensional grid environments. Such grids provide a simple, controlled experimental setting and avoid the substantial precomputation required for probabilistic roadmaps and navigation meshes. Although limited in representational power, this choice facilitates clear visualization and benchmarking, making the tool suitable for algorithmic analysis.
 
 ## Project Overview
 
-This project presents a tool designed to be easy to use and understand to help in the development and analysis of pathfinding algorithms. The tool allows users to create, edit, generate and save maps. Supporting the customization of test environments for algorithm evaluation. The program analyzes the results through benchmarking by recording metrics such as initial distance from the goal, steps taken to reach the goal, computational steps required for a solution, and memory usage. It then stores this information and displays it for analysis. The hope for this project is that it makes testing and analyzing path-finding algorithms easier and to have a dedicated tool to that purpose instead of using a secondary feature of something like a game engine or having to make your own testing environment.
+This project presents a tool designed for the development visualization and performance analysis of pathfinding algorithms algorithms operating on two-dimensional, grid-based environments. The tool allows users to create, edit, generate and save maps made from cells representing obstacles, open space, start positions and goal positions. Since Pathmaker allows the creation and editing of maps users can design specific test environments to evaluate algorithm behavior under varying circumstances. 
+
+The program analyzes the results through benchmarking by recording metrics such as initial distance from the goal measured in manhattan distance meaning know diagonal movement, steps taken to reach the goal, computational steps required for a solution, and memory usage. It then stores this information and displays it for analysis. The hope for this project is that it makes testing and analyzing path-finding algorithms easier and to have a dedicated tool to that purpose instead of using a secondary feature of something like a game engine or having to make your own testing environment.
+
+The tool also as the capability to allow for the implementation of user created algorithms. This is support algorithm development and research. Allowing for testing and visualization without requiring integration into a larger software. Pathmaker functions as a research environment allowing for controlled experimentation with pathfinding algorithms.
+
+## Implementation Details
 
 ### Rust
 
-The tool is created using the Rust programming language this is do to Rust's speed, speed memory safety, focus on concurrency and the integrated package manager cargo making it easy to develop and use different libraries or how to there referred to as crates
+The software is implemented using the Rust programming language. Rust is a statically typed, compiled language that emphasizes memory safety, zero-cost abstractions, and concurrency through a strict ownership model[@RustByExampleBeginner]. On top of Rust’s package manager providing an integrated build system and dependency manager, enabling modular development and reliable project configuration.
 
 ### SDL2
 
-In order to handle inputs and the display of the UI this tools relies on the rust bindings for SDL2. SDL2 is a multimedia library originally written in C. The reason for using SDL is because of the amount of control it gives to the developer as result of how low level it is. While also being consistently updated and compatible with many different operating systems.
+The graphical interface and input handling rely on the Simple DirectMedia Layer 2 (SDL2), a low-level multimedia library originally implemented in the C programming language. The reason for using SDL is because of it cross-platform capability on top of it's window creation, event and input handling, and rendering. This makes it suitable for lightweight visualization tools and games[@SDLSITE]. It giving low level access to inputs and graphics offers more precise control then something like a full featured game engine allowing analysis to be more accurate due to less overhead.
 
 ## Current State of the Art
 
@@ -78,7 +83,7 @@ Currently there are things like path-finding visualizers that you can find onlin
 
 ### Game Engines
 
-Game Engines like Unreal, Godot, Unity and others are often used as testbeds for path-finding algorithms as they can provide bench marking and the ability to create and control their own environments. However, this isn't their main purpose and game engines can be difficult to use, especially something like the unreal developed by epic games. This leads to an issue where a tool isn't powerful enough to be used as a proper way to analyze something or it has a major learning curve on how to create a map and implement code because of it having a broader purpose and not being focused on analyzing path-finding algorithms.
+Game Engines like Unreal, Godot, Unity along with games created in those engines are often used as testbeds for path-finding algorithms as they can provide bench marking and the ability to create and control their own environments[@HH2022]. However, this isn't their main purpose and game engines can be difficult to use, especially something like the unreal developed by epic games. This leads to an issue where a tool isn't powerful enough to be used as a proper way to analyze something or it has a major learning curve on how to create a map and implement code because of it having a broader purpose and not being focused on analyzing path-finding algorithms.
 
 ### Multimedia API
 
