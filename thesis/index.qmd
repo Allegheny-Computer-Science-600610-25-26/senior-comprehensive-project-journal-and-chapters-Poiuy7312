@@ -12,7 +12,7 @@ format:
 natbiboptions: numbers
 # EDIT AT YOUR OWN PERIL #
 
-title: PathMaker A tool for analyzing,developing and benchmarking Path-finding algorithms
+title: PathMaker\:A Tool For Analyzing, Developing and Benchmarking Path-finding Algorithms.
 
 firstreader: Dr.Janyl Jumadinova
 secondreader: Dr.Gregory Kapfhammer
