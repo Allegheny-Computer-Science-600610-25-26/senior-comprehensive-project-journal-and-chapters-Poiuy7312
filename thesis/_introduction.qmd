@@ -1,22 +1,8 @@
 # Introduction
 
-**Feedback**
-It would be better if you started with a gentle intro to or mention of path finding in the first paragraph, and then get into what your project is about in the second paragraph or in the middle of the first paragraph, instead of jumping directly into it. It will help with clarity.
-
-- Don't use future tense.
-- Define all jargon (NavMesh, AI, benchmarking) when you first mention it.
-- It is supposed to be a scientific paper. Your writing so far is too informal.
-- Every claim you make needs to be cited.
-
-- "2.2 Current State of the Art"( I would go a little more in depth)
-- "2.3 Goals of the Project"(expand more on this)
-- "2.4.1 Accuracy"(this should be most important , more clarification and explanation would help)
-
-**Feedback**
-
 ## What is PathFinding?
 
-Pathfinding is a computational process that determines an optimal route between two or more points within a defined environment. This concept is widely utilized across various industries, including navigation systems (e.g., GPS applications such as Google Maps), video game development for controlling non-playable characters (NPCs), and artificial intelligence (AI) for decision-making tasks. The primary objective of pathfinding algorithms is to identify the most efficient path, often minimizing distance, cost, or other relevant metrics, depending on the application context.
+Pathfinding is a computational process that determines an optimal route between two or more points within a defined environment. This concept is widely utilized across various industries, including navigation systems (e.g., GPS applications such as Google Maps), video game development for controlling non-playable characters (NPCs), and artificial intelligence (AI) for decision-making tasks. The pchrimary objective of pathfinding algorithms is to identify the most efficient path, often minimizing distance, cost, or other relevant metrics, depending on the application context.
 
 When evaluating pathfinding algorithms, both the choice of algorithm and the method of environmental representation are critical. In three-dimensional environments, such as those found in modern video games, navigation meshes (NavMesh) are commonly employed to delineate walkable areas. This project focuses on grid-based pathfinding, wherein the environment is modeled as a graph composed of nodes representing coordinates, obstacles, starting points, and goals. In grid-based systems, movement costs are typically uniform, whereas real-world applications may incorporate variable costs, such as fuel consumption or terrain difficulty, to reflect practical constraints. 
 
