@@ -8,3 +8,43 @@ chronological, or by topic, or according to some other criteria
 
 If ethical issues are central to this work, you should also address historical and
 contemporary issues or efforts made to address them.
+
+Pathfinding as a concept has been around longer
+
+
+## Algorithm Analysis
+
+[@BIGO].
+
+
+[@AlgorithmAnalysis]
+
+## Basic Algorithms
+
+Research in pathfinding algorithms has produced a variety of approaches, each with distinct strengths and limitations. Foundational algorithms such as A* [@AStarSearch] and Dijkstra’s algorithm [@DIJKSTRA] remain widely used due to their reliability and efficiency in static environments. Numerous variants and heuristic-based methods have been proposed to address specific challenges, including dynamic environments and multi-agent scenarios.
+
+## Heuristic Based Search
+
+Navigation meshes (NavMesh) [@BRANDSANDYTHESIS] and probabilistic roadmaps are commonly used in robotics and game development to represent walkable areas and facilitate efficient path computation. While these methods reduce search complexity, they often require substantial precomputation and are less effective in highly dynamic or procedurally generated environments.
+
+
+## Visualizers
+
+
+### Pathfinding Vizualizer
+
+Visualization and benchmarking tools, such as the Pathfinding Visualizer by Clément Mihailescu [@ClémentMihailescu2016], provide interactive platforms for understanding algorithm behavior and seems primarily to be an education tool to help explain how known algorithms function. However, these tools often lack comprehensive benchmarking features and extensibility for custom algorithm development. Academic projects and open-source platforms have attempted to fill this gap, but many remain limited in scope or usability.
+
+### PFAlgoViz
+
+There is also the PFAlgoViz by Karan Batta which similar to the previous program provides visualization for pathfinding algorithm while also allowing the implementation of modified or custom algorithms [@PFAlgo]. The purpose of this tool is to aid in debugging by giving an in-depth visualization of what the algorithm is doing and allowing a user to visually observe it's behavior. It also has built in error checking and the ability for breakpoint analysis allowing it to debug only sections of the code as defined by the user [@PFAlgo]. What this tool doesn't address is once again bench marking and algorithm analysis. This tool is great for understanding what a program is doing but doesn't give a defined metric of evaluating an algorithms performance in it's accuracy, time complexity and memory usage. This tool is great for getting a step by step account of what an algorithm is actually doing but it's not nor is it trying to be used as benchmarking or direct comparisons between algorithms.
+
+## Game Engines and multimedia Libraries
+
+Game engines such as Unreal, Unity, and Godot [@HH2022] are frequently employed as testbeds for pathfinding research. These engines offer powerful visualization and benchmarking capabilities but are not specifically designed for algorithmic analysis, resulting in a steep learning curve and potential overhead for researchers focused on algorithm development.
+
+Lightweight multimedia frameworks, including SDL and DirectX [@SDLSITE], provide low-level access to graphics and input handling, enabling the creation of custom visualization tools. These frameworks offer greater control and efficiency compared to full-featured engines but require more development effort to implement benchmarking and analysis features.
+
+## My Tool
+
+Despite the breadth of existing solutions, there remains a need for dedicated, extensible tools that support both visualization and rigorous benchmarking of pathfinding algorithms in controlled environments. The tool presented in this work addresses these gaps by enabling user-defined map creation, algorithm implementation, and systematic performance analysis, thereby facilitating research and development in pathfinding.
