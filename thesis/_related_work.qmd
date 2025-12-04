@@ -1,23 +1,19 @@
 # Related work
 
-This chapter includes a broad and detailed review of relevant existing work.
-The literature review should provide background and context for the thesis work.
-The subsections may be organized in whatever manner seems best suited to the material--
-chronological, or by topic, or according to some other criteria
-(e.g., primary versus secondary resources).
-
-If ethical issues are central to this work, you should also address historical and
-contemporary issues or efforts made to address them.
-
-Pathfinding as a concept has been around longer
-
-
 ## Algorithm Analysis
 
-[@BIGO].
+### Big-O Notation
 
+Big-O notation is one of the most common ways to represent the complexity of an algorithm. It represents the most amount of steps given an input size [@BIGO]. It's also important to understand the complexity of the problem an algorithm is trying to solve. For example a Djikstra time complexity when trying to find the shortest path is **O(N^2)** this is because is mentioned before dijkstra will find every possible path from a starting point to another valid point[@WCBC]. This can often be estimated through looking at actual source code and analyzing the source code to come up with a notation. 
 
-[@AlgorithmAnalysis]
+Another way is to run doubling experiments where you run the algorithm and double the input size and measure the change in run time[@AlgorithmAnalysis]. Which can help infer what the running time complexity allowing a researcher or developer to get an estimate for the overall time complexity of a program.
+
+- **Run Time:** The amount of time it takes for a program to halt.
+
+- **Running Time:** The amount of computational steps a program takes to get a solution
+
+This is also a common benchmarking technique for software and performance as when the large the program gets the more unfeasible directly analyzing source code in a heuristic manor. Do to this while Pathfinder will check the performance of algorithms through a series of doubling experiments as it doesn't rely on known knowledge to give a result. This also allows for there to be deaper analysis on performance on different systems and hardware. Allowing developers to make more informed decisions on if a algorithm is worth using at smaller input sizes or if at a larger input size should it be switched to something else.
+
 
 ## Basic Algorithms
 
@@ -25,7 +21,8 @@ Research in pathfinding algorithms has produced a variety of approaches, each wi
 
 ## Heuristic Based Search
 
-Navigation meshes (NavMesh) [@BRANDSANDYTHESIS] and probabilistic roadmaps are commonly used in robotics and game development to represent walkable areas and facilitate efficient path computation. While these methods reduce search complexity, they often require substantial precomputation and are less effective in highly dynamic or procedurally generated environments.
+
+While something like A* uses heuristics in estimating a shortest path and chosing which node to search first depending how close it is to the estimated path. You can go even further with this with things like navigation meshes (NavMesh) [@BRANDSANDYTHESIS] and probabilistic roadmaps are commonly used in robotics and game development to represent walkable areas and facilitate efficient path computation. While these methods reduce search complexity, they often require substantial pre-computation and are less effective in highly dynamic or procedurally generated environments.
 
 
 ## Visualizers
@@ -43,7 +40,14 @@ There is also the PFAlgoViz by Karan Batta which similar to the previous program
 
 Game engines such as Unreal, Unity, and Godot [@HH2022] are frequently employed as testbeds for pathfinding research. These engines offer powerful visualization and benchmarking capabilities but are not specifically designed for algorithmic analysis, resulting in a steep learning curve and potential overhead for researchers focused on algorithm development.
 
-Lightweight multimedia frameworks, including SDL and DirectX [@SDLSITE], provide low-level access to graphics and input handling, enabling the creation of custom visualization tools. These frameworks offer greater control and efficiency compared to full-featured engines but require more development effort to implement benchmarking and analysis features.
+
+### Godot
+
+Godot specifically implementing A* for 2D and 3D environments as well as the ability to create and generate navigation meshes for a game. While Godot does have benchmarking capabilities at is it monitors memory usage and performance when running a program. It also in terms of pathfinding and navigation it counts the numbers of agents, maps and polygons[@GodotDocs]. However it does not specifically benchmark the the algorithms in use nor does it run any experiments simply given the state of the environment and the amount of objects within the environment.
+
+### Multimedia Libraries
+
+Lightweight multimedia frameworks, including SDL and DirectX [@SDLSITE], provide low-level access to graphics and input handling, enabling the creation of custom visualization tools. These frameworks offer greater control and efficiency compared to full-featured engines but require more development effort to implement benchmarking and analysis features. While also not having any built in tools for benchmarking programs.
 
 ## My Tool
 
