@@ -1,30 +1,54 @@
-# Related work
+# Related Work
 
-## Algorithm Basics
+## Algorithm Analysis and Performance Evaluation
 
-Algorithm analysis is the backbone of Pathfinder there are very few dedicated softwares for benchmarking and algorithm analysis they often take the form of libraries for a language or there is a built in way to implement benchmarks in a code base an example being Rust and Cargo cargo has specific command to run benchmarks for a rust program although you have to manually write the benchmarks for your program. In things like game engine they give the performance of something while it's running but it doesn't give a summary or an overview of it's performance in different circumstances and input only what's currently running. This is good for debugging and optimizing a game or program as whole but it doesn't target pathfinding specifically only the program as a whole and it also doesn't run any experiments to see how it performs in different situations the user has to set that up themselves.
+Algorithmic analysis forms the foundation of pathfinding research, as understanding computational complexity is essential for comparing approaches and selecting the most efficient algorithm for a given environment. Although many programming languages provide built-in benchmarking capabilities—such as Rust’s benchmark system integrated into Cargo—these tools require manual setup and focus on evaluating general program performance rather than algorithmic behavior in controlled environments. Similarly, game engines often expose performance metrics like frame time, memory use, or object counts, but these metrics describe *runtime performance of the application*, not the algorithmic properties of pathfinding techniques themselves. They cannot systematically vary inputs, run repeated trials, or estimate complexity across different conditions.
 
-### Big-O Notation
 
-Big-O notation is one of the most common ways to represent the complexity of an algorithm. It represents the most amount of steps given an input size [@BIGO]. It's also important to understand the complexity of the problem an algorithm is trying to solve. For example a Djikstra time complexity when trying to find the shortest path is **O(N^2)** this is because is mentioned before dijkstra will find every possible path from a starting point to another valid point[@WCBC]. This can often be estimated through looking at actual source code and analyzing the source code to come up with a notation. 
+###  Big-O Notation and Empirical Analysis
 
-Another way is to run doubling experiments where you run the algorithm and double the input size and measure the change in run time[@AlgorithmAnalysis]. Which can help infer what the running time complexity allowing a researcher or developer to get an estimate for the overall time complexity of a program.
+Big-O notation remains the standard method for describing the worst-case growth of an algorithm relative to input size [@BIGO]. For example, Dijkstra’s algorithm has a time complexity of **O(N²)** when implemented using simple data structures, reflecting its need to examine all reachable nodes in the graph [@WCBC]. However, analytic complexity estimates do not always reflect real-world performance, and can have vastly different behavior depending on the environment. Which is why so many different algorithms exist and why having a tool compare algorithms in differing environments like PathMaker is important.
 
-- **Run Time:** The amount of time it takes for a program to halt.
+To help address this gap, methods such as doubling experiments are often used to estimate an algorithm’s practical growth rate by observing how computation time scales as input size is doubled [@AlgorithmAnalysis]. These experiments provide information into real-world performance where theoretical analysis can be impractical or insufficient as Hardware,Software and environmental factors can cause performance differences. PathMaker integrates doubling experiments directly into its benchmarking pipeline, enabling researchers and developers to estimate complexity functionally without relying solely on manual analysis of source code or theoretical results.
 
-- **Running Time:** The amount of computational steps a program takes to get a solution
+## Pathfinding Algorithms and Heuristic-Based Search
 
-This is also a common benchmarking technique for software and performance as when the large the program gets the more unfeasible directly analyzing source code in a heuristic manor. Do to this while Pathfinder will check the performance of algorithms through a series of doubling experiments as it doesn't rely on known knowledge to give a result. This also allows for there to be deeper analysis on performance on different systems and hardware. Allowing developers to make more informed decisions on if a algorithm is worth using at smaller input sizes or if at a larger input size should it be switched to something else.
+Research in pathfinding has produced a broad family of algorithms, each suited to different classes of navigation problems. Foundational methods such as Dijkstra’s algorithm [@DIJKSTRA] and A* search [@AStarSearch] remain widely used due to their reliability in static environments with well-defined cost structures. A* extends Dijkstra’s method through heuristics that prioritize nodes likely to lie along the shortest path. Performance, therefore, depends heavily on the heuristic’s admissibility and accuracy.
 
-Research in pathfinding algorithms has produced a variety of approaches, each with distinct strengths and limitations. Foundational algorithms such as A* [@AStarSearch] and Dijkstra’s algorithm [@DIJKSTRA] remain widely used due to their reliability and efficiency in static environments. Numerous variants and heuristic-based methods have been proposed to address specific challenges, including dynamic environments and multi-agent scenarios.
+Traditional algorithms such as Dijkstra and A* assume a static environment where traversal costs and obstacle positions remain fixed. However, many real-world and simulation applications involve dynamic environments, where obstacles may appear or disappear and terrain costs may change over time. Algorithms such as D* Lite [@DStarLite] and Lifelong Planning A* or Incremental A* [@LPAStar] have been developed to handle these evolving conditions efficiently, updating paths incrementally without recomputing from scratch. Similarly, sampling-based planners like Rapidly-Exploring Random Trees (RRTs) are frequently applied in stochastic or continuous domains. These approaches pose additional challenges for benchmarking, as performance depends not only on input size but also on the frequency and magnitude of environmental changes. Most existing visualization tools focus on static maps and cannot systematically evaluate algorithm performance in such dynamic contexts.
 
-## Heuristic Based Search
+Beyond classical graph search methods, many modern systems use heuristic-driven spatial representations, including navigation meshes (NavMesh) [@BRANDSANDYTHESIS] and probabilistic roadmaps. These approaches reduce the search space but often require significant preprocessing, which can make them less suitable for dynamic or procedurally generated environments. Because heuristic methods exhibit highly variable performance across different map structures and heuristic designs, they present challenges for comparative evaluation—further motivating the need for a tool like PathMaker that systematically benchmarks algorithms across user-defined environments.
 
-While something like A* uses heuristics in estimating a shortest path and chosing which node to search first depending how close it is to the estimated path. You can go even further with this with things like navigation meshes (NavMesh) [@BRANDSANDYTHESIS] and probabilistic roadmaps are commonly used in robotics and game development to represent walkable areas and facilitate efficient path computation. While these methods reduce search complexity, they often require substantial pre-computation and are less effective in highly dynamic or procedurally generated environments.
 
-## Related Tools
+## BenchMarking for Differing Environments
 
-### Vizualizers and Debuggers
+While classical pathfinding research has focused primarily on static grid environments, recent work has explored more complex scenarios, reflecting the increasing demands of robotics, games, and AI applications. These emerging trends highlight both the limitations of existing benchmarking tools and the opportunities for extending platforms like PathMaker in future work.
+
+A notable contribution is Guards, a benchmark framework designed to analyze algorithm performance under varied traversal-cost and an algorithms performance changes based on travel cost complexity [@MOGHADAM2024]. The framework introduces the concept of weight complexity, a quantitative measure that captures the structural difficulty introduced by non-uniform movement costs across a grid. By adjusting weight complexity, the benchmark evaluates how cost variation affects search difficulty and algorithmic efficiency across a variety of environments. This approach allows for the evaluation of algorithms across different environments that reflect more diverse conditions rather then solely relying on an unweighted environments and shows how algorithms performance change based on weight complexity of an environment. The intent for this framework was to help game developes select pathfinding algorithms for the game and what would work best for there situation.
+
+PathMaker intends to build on this concept by providing visualization, user defined environment's where these maps can be generated and analyzed and allowing for easy analysis of algorithms in these user defined environments. Enabling researchers and developers to explore algorithm behavior across a broader range of environmental and computational conditions.
+
+### Benchmarking for Dynamic Environments
+
+While there is not specific standard framework like Guards for analyzing algorithms performance with in a Dynamic environment PathMaker intends to build on the contributions of previous work that provides an easy to use resource 
+
+###  Big-O Notation and Empirical Analysis
+
+Big-O notation remains the standard method for describing the worst-case growth of an algorithm relative to input size [@BIGO]. For example, Dijkstra’s algorithm has a time complexity of **O(N²)** when implemented using simple data structures, reflecting its need to examine all reachable nodes in the graph [@WCBC]. However, analytic complexity estimates do not always reflect real-world performance, and can have vastly different behavior depending on the environment. Which is why so many different algorithms exist and why having a tool compare algorithms in differing environments like PathMaker is important.
+
+To help address this gap, methods such as doubling experiments are often used to estimate an algorithm’s practical growth rate by observing how computation time scales as input size is doubled [@AlgorithmAnalysis]. These experiments provide information into real-world performance where theoretical analysis can be impractical or insufficient as Hardware,Software and environmental factors can cause performance differences. PathMaker integrates doubling experiments directly into its benchmarking pipeline, enabling researchers and developers to estimate complexity functionally without relying solely on manual analysis of source code or theoretical results.
+
+## Pathfinding Algorithms and Heuristic-Based Search
+
+Research in pathfinding has produced a broad family of algorithms, each suited to different classes of navigation problems. Foundational methods such as Dijkstra’s algorithm [@DIJKSTRA] and A* search [@AStarSearch] remain widely used due to their reliability in static environments with well-defined cost structures. A* extends Dijkstra’s method through heuristics that prioritize nodes likely to lie along the shortest path. Performance, therefore, depends heavily on the heuristic’s admissibility and accuracy.
+
+Beyond classical graph search methods, many modern systems use heuristic-driven spatial representations, including navigation meshes (NavMesh) [@BRANDSANDYTHESIS] and probabilistic roadmaps. These approaches reduce the search space but often require significant preprocessing, which can make them less suitable for dynamic or procedurally generated environments. Because heuristic methods exhibit highly variable performance across different map structures and heuristic designs, they present challenges for comparative evaluation—further motivating the need for a tool like PathMaker that systematically benchmarks algorithms across user-defined environments.
+
+## Tools for Visualization, Debugging, and Algorithm Understanding
+
+Many existing tools support visualization or debugging of pathfinding algorithms, but few combine these capabilities with benchmarking or comparative analysis.
+
+### Educational and Debugging Visualizers
 
 #### Pathfinding Vizualizer
 
@@ -32,30 +56,53 @@ Visualization and benchmarking tools, such as the Pathfinding Visualizer by Clé
 
 #### PFAlgoViz
 
-There is also the PFAlgoViz by Karan Batta which similar to the previous program provides visualization for pathfinding algorithm while also allowing the implementation of modified or custom algorithms [@PFAlgo]. The purpose of this tool is to aid in debugging by giving an in-depth visualization of what the algorithm is doing and allowing a user to visually observe it's behavior. It also has built in error checking and the ability for breakpoint analysis allowing it to debug only sections of the code as defined by the user [@PFAlgo]. What this tool doesn't address is once again bench marking and algorithm analysis. This tool is great for understanding what a program is doing but doesn't give a defined metric of evaluating an algorithms performance in it's accuracy, time complexity and memory usage. This tool is great for getting a step by step account of what an algorithm is actually doing but it's not nor is it trying to be used as benchmarking or direct comparisons between algorithms.
+There is also the PFAlgoViz by Karan Batta which similar to the previous program provides visualization for pathfinding algorithm while also allowing the implementation of modified or custom algorithms [@PFAlgo]. The purpose of this tool is to aid in debugging by giving an in-depth visualization of what the algorithm is doing and allowing a user to visually observe it's behavior. It also has built in error checking and the ability for breakpoint analysis allowing it to debug only sections of the code as defined by the user [@PFAlgo]. What this tool doesn't address is once again bench marking and algorithm analysis. This tool is great for understanding what a program is doing but doesn't give a defined metric of evaluating an algorithms performance in it's accuracy, time complexity and memory usage.
 
-### Path Planners in Robotics
+PathMaker builds on the strengths of these tools by integrating interactive visualization with systematic, automated performance analysis—allowing users both to observe *how* an algorithm behaves and to quantify *how well* it performs.
 
-#### Path Planner
+## Path Planning Tools in Robotics
 
-PathPlanner is a path generation and routine design tool designed for FRC robotics by Team 3015. It provides an environment for creating and executing robot pathing[@PPlanner]. PathPlanner includes real-time path previewing and allows users to create “event markers” along a path, which can trigger specified code or commands to execute at those points. It also supports the construction of modular autonomous routines composed of multiple paths, with automatic file management and saving. PathPlanner also provides a vendor library for path generation and implementing custom controllers. While PathPlanner is a powerful tool for robotics within a competition setting, its purpose is focused on motion generation and autonomous behavior rather than benchmarking or comparative algorithm analysis. As such, it does not provide controlled experimental facilities or metrics for evaluating algorithm performance.
+Robotics platforms offer sophisticated path generation and optimization tools, but their goals differ significantly from algorithmic benchmarking.
 
-#### Choreo
+**PathPlanner**, developed for FRC robotics, enables users to design paths, attach behavioral event markers, and compose complex autonomous routines [@PPlanner]. It provides an environment for creating and executing robot pathing[@PPlanner]. PathPlanner includes real-time path previewing and allows users to create “event markers” along a path, which can trigger specified code or commands to execute at those points. It also supports the construction of modular autonomous routines composed of multiple paths, with automatic file management and saving. PathPlanner also provides a vendor library for path generation and implementing custom controllers. While PathPlanner is a powerful tool for robotics within a competition setting, its purpose is focused on motion generation and autonomous behavior rather than benchmarking or comparative algorithm analysis. As such, it does not provide controlled experimental environments or metrics for evaluating algorithm performance.
 
-Choreo is a path-optimization tool also designed for FRC robotics that generates mathematically optimal paths through user-defined waypoints while respecting environmental constraints [@Choreo]. Unlike a simple path-drawing tool, Choreo produces physically feasible paths for a robot to follow allowing for smoother execution of preplanned paths by a robot. Users are able to define paths using ordered points. Choreo provides an interactive UI, visualization, and tools for adjusting the environment and it's constraints,  and reassigning waypoint. These features enable detailed control over path structure while maintaining a user-friendly interface. While Choreo is great at optimizing path for real world robots with physical constraints its focus is on generating constraint-aware paths rather than benchmarking or comparative analysis. Thus, like PathPlanner, it serves practical robotics applications rather than algorithmic analysis.
+**Choreo**, is a path-optimization tool also designed for FRC robotics that generates mathematically optimal paths through user-defined waypoints while respecting environmental constraints [@Choreo]. Unlike a simple path-drawing tool, Choreo produces physically feasible paths for a robot to follow allowing for smoother execution of preplanned paths by a robot. Users are able to define paths using ordered points. Choreo provides an interactive UI, visualization, and tools for adjusting the environment and it's constraints,  and reassigning waypoint. These features enable detailed control over path structure while maintaining a user-friendly interface. While Choreo is great at optimizing path for real world robots with physical constraints its focus is on generating constraint-aware paths rather than benchmarking or comparative analysis.
 
-## Game Engines and multimedia Libraries
+While these tools highlight the practical importance of path quality and constraint-aware motion planning, neither provides facilities for controlled experimentation, performance metrics, or algorithm comparison. PathMaker fills this gap by targeting algorithmic research rather than operational robotics.
 
-Game engines such as Unreal, Unity, and Godot [@HH2022] are frequently employed as testbeds for pathfinding research. These engines offer powerful visualization and benchmarking capabilities but are not specifically designed for algorithmic analysis, resulting in a steep learning curve and potential overhead for researchers focused on algorithm development.
+**PathBench:** is an open-source tool created in Python designed for benchmarking, visualization, and development of path planners in robotics[@PathBenchGitHub]. It supports search methods such as A* and Dijkstra—and learned planners, providing a unified framework for comparison across a variety of environments. Users can create, save, and reuse maps, including 2D grids, 3D simulations, and real-world datasets, while the system collects detailed performance metrics such as path length, success rate, runtime, and memory usage.
 
-### Godot
+Unlike simpler educational visualizers, PathBench integrates interactive simulation, empirical benchmarking, and support for ML-based planners, enabling researchers to evaluate algorithm behavior and performance in a controlled yet flexible setting. While it provides a comprehensive environment for experimentation.
 
-Godot specifically implementing A* for 2D and 3D environments as well as the ability to create and generate navigation meshes for a game. While Godot does have benchmarking capabilities at is it monitors memory usage and performance when running a program. It also in terms of pathfinding and navigation it counts the numbers of agents, maps and polygons[@GodotDocs]. However it does not specifically benchmark the the algorithms in use nor does it run any doubling experiments it simply gives observable metrics and the state of the environment and the amount of objects within the environment.
+PathBench has a lot of the functionality PathMaker aims for. While it does allow for comparison in defined environments it only supports generated environments for machine learning algorithms. Along with the tool seemingly know longer being updated it only being tested on Ubuntu and very limited documentation on how to use the tool and what it's fully capable of Leaves a lot to be desired with this tool. PathMaker aims to fill these gaps that this tool has with an easy to use and understand tool with while using more modern benchmarking frameworks like Guard.
 
-### Multimedia Libraries
+## Game Engines and Multimedia Frameworks
 
-Lightweight multimedia frameworks like SDL[@SDLSITE], provide low-level access to graphics and input handling, enabling the creation of custom visualization tools. These frameworks offer greater control and efficiency compared to full-featured engines but require more development effort to implement benchmarking and analysis features. While also not having any built in tools for benchmarking programs.
+Game engines such as Unreal, Unity, and Godot [@HH2022] are frequently used as experimental platforms for pathfinding due to their built-in navigation systems, visualization tools, and physics engines. 
 
-## This Tool
+- **Godot**, for example implementing A* for 2D and 3D environments as well as the ability to create and generate navigation meshes for a game. While Godot does have benchmarking capabilities at is it monitors memory usage and performance when running a program. It also in terms of pathfinding and navigation it counts the numbers of agents, maps and polygons[@GodotDocs]. However it does not specifically benchmark the the algorithms in use nor does it run any doubling experiments it simply gives observable metrics and the state of the environment and the amount of objects within the environment.
 
-Despite the breadth of existing solutions, there remains a need for dedicated, extensible tools that support both visualization and benchmarking of pathfinding algorithms in controlled environments. The tool presented in this work addresses these gaps by enabling user-defined map creation, algorithm implementation, and systematic performance analysis, thereby facilitating research and development in pathfinding.
+- **Unreal**, Similarly while having overall benchmarking capabilities and add ons that can be installed to enhance this functionality. It still can not run benchmarks in a variety of environments and give an analysis on the difference in performance[@UnrealDocs]. Along with the large learning curve for learning Unreal it can be difficult to set up a proper environment without extensive previous knowledge. PathMaker is easy to use and allows for easily modifiable map environment modification and automatically implemented benchmarking.
+
+- **SDL** Lightweight multimedia libraries such as SDL [@SDLSITE] provide low-level control for researchers building custom tools from scratch but offer no native benchmarking infrastructure. This increases development effort and shifts focus away from algorithmic analysis. As SDL is not designed for research or analysis but simply allowing for the usage of key-inputs, window manipulation and the usage of graphics with it's compatibility with things such as Vulkan a 3D graphics interface. However SDL has served as the a core part of game engines such as Valve's source engine[@SDLSITE] and Directly to create game like Noita[@SDLSITE]. 
+
+## Summary and Motivation for This Tool
+
+- **Benchmark frameworks** like Guards provide important defined and standardized evaluation techniques but do not provide tools for storing experiments, regenerating environments, or easily creating an environment for the benchmarks to be used in.
+
+- **Educational visualizers** typically allow users to observe algorithm behavior but do not provide definable metrics or a deeper analysis of performance across differing environments.
+
+- **Game engines** expose runtime metrics and track environment factors but do not save or run any deeper analysis based on this information or allow for easy map generation and modification.
+
+- **Robotics tools** like PathPlanner and Choreo focus on motion feasibility rather than analysis consistency, and they do not track inputs or environmental parameters in ways that support scientific reproducibility.
+
+
+Across educational visualizers, debugging platforms, robotics planners, and game engines, existing tools address only isolated aspects of the pathfinding research. None provide a fully integrated environment that:
+
+- supports user-defined map creation,  
+- allows custom algorithm implementation,  
+- enables automated, repeatable performance experiments,  
+- performs empirical complexity estimation, and  
+- visualizes algorithm behavior interactively.
+
+PathMaker addresses these limitations by offering a unified platform for both visualization and benchmarking of pathfinding algorithms. By combining controlled experimentation with intuitive visualization, the tool enables deeper analysis of how algorithms perform across diverse environments, hardware configurations, and input scales—supporting both research and practical development.
