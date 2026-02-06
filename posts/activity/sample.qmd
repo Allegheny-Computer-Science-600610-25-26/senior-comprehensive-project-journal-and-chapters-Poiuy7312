@@ -1,10 +1,9 @@
 ---
-title: "Activity template post"
-date: "2024-08-29"
+title: "Why is it called Pathmaker?"
+image: PathMaker-Demo.jpg
+date: "2024-11-12"
 ---
 
-This is the first post in a Quarto blog. Welcome!
+![](PathMaker-Demo.jpg)
 
-![](thumbnail.jpg)
-
-Since this post doesn't specify an explicit `image`, the first image in the post will be used in the listing page of posts.
+The Name of my tool is Pathmaker. I wanted to keep it simple and help explain what it's main purpose is. Since it's related to path-finding and currently is mostly for creating and editing maps to use as a environment for testing path-finding algorithms I believe the name Pathmaker fits the theme a purpose of the project and explains what it's used for.

@@ -7,10 +7,10 @@ project:
 execute:
   freeze: auto
 author:
-  - name: A. Student
-    email: astudent@allegheny.edu
+  - name: Preston Smith
+    email: smith07@allegheny.edu
 website:
-  title: "ReadyResearchers Template"
+  title: "PathMaker: Benchmarking"
   navbar:
     right:
       - text: "Senior Thesis"

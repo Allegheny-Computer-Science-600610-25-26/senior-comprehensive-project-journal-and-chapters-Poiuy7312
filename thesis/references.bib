@@ -1,10 +1,239 @@
-@article{plaat1996research,
-  title={Research, re: search and re-search},
-  author={Plaat, Aske},
-  journal={ICGA Journal},
-  volume={19},
-  number={3},
-  pages={186--186},
-  year={1996},
-  publisher={IOS Press}
+@article{BAILEY2021103560,
+  title={Pathlength analysis for grid-based path planning},
+  author={James P. Bailey, Alex Nash, Craig A. Tovey, Sven Koenig},
+  journal={Artificial Intelligence},
+  volume={301},
+  pages={103-560},
+  year={2021}
+}
+
+
+@article {DIJKSTRA,
+  title={A Note on Two Problems in Connexion with Graphs},
+  author={E.W Dijkstra},
+  journal={Numerische Mathematik},
+  volume={1},
+  pages={269-271},
+  year={1959},
+}
+@thesis{BRANDSANDYTHESIS,
+  title={Efficient obstacle avoidance using
+autonomously generated navigation meshes},
+  author={Sandy Brand},
+  type={Master's Thesis},
+  school={Delft University of Technology},
+  year={2009}
+}
+
+@article{HH2022,
+  title={Benchmarks for Pathfinding Search: Iron Harvest},
+  volume={15},
+  url={https://ojs.aaai.org/index.php/SOCS/article/view/21770},
+  DOI={10.1609/socs.v15i1.21770},
+  abstractNote={Pathfinding is a central topic in AI for games, with many approaches having been suggested. But comparing different algorithms is tricky, because design choices stem from different practical considerations; e.g., some pathfinding systems are grid-based, others rely on a navigation mesh or visibility graph and so on. Current benchmarks mirror this trend, focusing on one set of assumptions while ignoring the rest. In this work we present a new unified benchmark using data from the game Iron Harvest. For 35 different levels in the game we generate several complementary map representations (grid, mesh and obstacle-set) and we provide a common set of challenging instances. We describe and analyse the new benchmark and then compare several leading pathfinding algorithms that begin from different assumption sets. Our goal is to allow researchers and practitioners to better understand the relative strengths and weakness of competing techniques.}, number={1}, journal={Proceedings of the International Symposium on Combinatorial Search}, author={Harabor, Daniel and Hechenberger, Ryan and Jahn, Thomas}, year={2022}, month={Jul.}, pages={218-222} 
+}
+
+@article{Nadour2022,
+  author={Nadour,Mohamed and Cherroun,Lakhmissi},
+  year={2022},
+  title={Using flood-fill algorithms for an autonomous mobile robot maze navigation},
+  journal={International journal of system assurance engineering and management},
+  volume={13},
+  number={1},
+  pages={546-555},
+  abstract={Autonomous robotic navigation in unknown and complex environment as mazes is an important task for the wheeled mobile robots. Different algorithms have been used to deal with this problem, where the most known are based on optimization processes in order to find the optimal path safely. The present paper describes an implementation of a simple maze-solving algorithms based on Arduino-UNO card. The two versions of flood-fill algorithms are used for mobile robot maze navigation: the basic version of flood-fill algorithm (FFA) and the modified flood-fill algorithm (MFFA). Ultrasonic sensors are used to perceive, detect walls and the maze shape. The obtained experimental results demonstrate the efficiency of these implemented algorithms to autonomous robot navigation. In all cases, the controlled wheeled mobile robot is able to move in the maze safely, and can solve it effectively and autonomously.},
+  keywords={Algorithms; Autonomous navigation; Case Studies; Engineering; Engineering Economics; Logistics; Marketing; Optimization; Organization; Quality Control; Reliability; Robots; Safety and Risk},
+  isbn={0975-6809},
+  language={English},
+}
+
+
+@article{s22228983,
+AUTHOR = {Qiao, Lijun and Luo, Xiao and Luo, Qingsheng},
+TITLE = {An Optimized Probabilistic Roadmap Algorithm for Path Planning of Mobile Robots in Complex Environments with Narrow Channels},
+JOURNAL = {Sensors},
+VOLUME = {22},
+YEAR = {2022},
+NUMBER = {22},
+ARTICLE-NUMBER = {8983},
+URL = {https://www.mdpi.com/1424-8220/22/22/8983},
+PubMedID = {36433584},
+ISSN = {1424-8220},
+ABSTRACT = {In this paper, we propose a new path planning algorithm based on the probabilistic roadmaps method (PRM), in order to effectively solve the autonomous path planning of mobile robots in complex environments with multiple narrow channels. The improved PRM algorithm mainly improves the density and distribution of sampling points in the narrow channel, through a combination of the learning process of the PRM algorithm and the APF algorithm. We also shortened the required time and path length by optimizing the query process. The first key technology to improve the PRM algorithm involves optimizing the number and distribution of free points and collision-free lines in the free workspace. To ensure full visibility of the narrow channel, we extend the obstacles through the diagonal distance of the mobile robot while ignoring the safety distance. Considering the safety distance during movement, we re-classify the all sampling points obtained by the quasi-random sampling principle into three categories: free points, obstacle points, and adjacent points. Next, we transform obstacle points into the free points of the narrow channel by combining the APF algorithm and the characteristics of the narrow channel, increasing the density of sampling points in the narrow space. Then, we include potential energy judgment into the construction process of collision-free lines shortening the required time and reduce collisions with obstacles. Optimizing the query process of the PRM algorithm is the second key technology. To reduce the required time in the query process, we adapt the bidirectional A* algorithm to query these local paths and obtain an effective path to the target point. We also combine the path pruning technology with the potential energy function to obtain a short path without collisions. Finally, the experimental results demonstrate that the new PRM path planning technology can improve the density of free points in narrow spaces and achieve an optimized, collision-free path in complex environments with multiple narrow channels.},
+DOI = {10.3390/s22228983}
+}
+
+
+@article{AStarSearch,
+  author={Hart, Peter E. and Nilsson, Nils J. and Raphael, Bertram},
+  journal={IEEE Transactions on Systems Science and Cybernetics}, 
+  title={A Formal Basis for the Heuristic Determination of Minimum Cost Paths}, 
+  year={1968},
+  volume={4},
+  number={2},
+  pages={100-107},
+  keywords={Costs;Mathematical programming;Minimization methods;Functional programming;Automatic control;Minimax techniques;Gradient methods;Chemical technology;Automatic programming;Instruction sets},
+  doi={10.1109/TSSC.1968.300136}
+}
+
+@Misc{DepthFig,
+  author={Alexander Drichel},
+  title={Depth-first-tree},
+  year={2008},
+  url={https://commons.wikimedia.org/wiki/File:Depth-first-tree.svg}
+}
+
+@book{WCBC,
+  author={MacCormick, John},
+  title={What Can Be Computed?},
+  year={2018},
+  pages={210-250},
+}
+
+@software{GodotDocs,
+  author={GodotCommunity},
+  title={Godot},
+  year={2014},
+  url={https://github.com/godotengine},
+}
+
+@blog{UnrealDocs,
+  author={EpicGames},
+  title={Unreal},
+  url={https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-5-7-release-notes},
+}
+
+@article{DStarLite,
+  author    = {Sven Koenig and Maxim Likhachev},
+  title     = {D* Lite},
+  booktitle = {Proceedings of the 18th Conference on Artificial Intelligence (AAAI '02)},
+  year      = {2002},
+  pages     = {476--483},
+  month     = {July},
+}
+
+@article{LPAStar,
+  author    = {Sven Koenig and Maxim Likhachev},
+  title     = {Incremental Search: Lifelong Planning A*},
+  booktitle = {Advances in Neural Information Processing Systems 14 (NIPS*2001)},
+  year      = {2001},
+  pages     = {431--438},
+  address   = {Vancouver, BC, Canada},
+}
+
+@software{PPlanner,
+  author={team 3015},
+  title={Path Planner},
+  year={2019},
+  url={https://github.com/mjansen4857/pathplanner},
+}
+
+@software{PathBenchGitHub,
+  title        = {PathBench: A Benchmarking Platform for Classical and Learned Path Planning Algorithms},
+  author       = {Perfectly Balanced},
+  year         = {2021},
+  url = {https://github.com/perfectly-balanced/PathBench},
+}
+
+
+@software{Choreo,
+  author={Sleipnir Group},
+  title={Choreo},
+  year={2023},
+  url={https://github.com/SleipnirGroup/Choreo},
+}
+
+
+@software{ClémentMihailescu2016
+,
+  author = {Clément, Mihailescu.},
+  title = {Pathfinding-Visualizer},
+  year = {2016},
+  url = {https://github.com/clementmihailescu/Pathfinding-Visualizer},
+}
+
+@Misc {SDLSITE,
+  author={SDLCommunity},
+  title = {Simple DirectMedia Layer - Homepage},
+  year = {2025},
+  url = {https://www.libsdl.org/}
+}
+
+@Misc {TERWIKI:001,
+  author={TerrariaCommunity},
+  title={Fighter AI},
+  year = {2025},
+  url={https://terraria.wiki.gg/wiki/Fighter_AI}
+}
+
+@Misc {TERWIKI:002,
+  author={TerrariaCommunity},
+  title={Bosses},
+  year = {2025},
+  url={https://terraria.wiki.gg/wiki/Bosses}
+}
+
+
+@Book{RustByExampleBeginner,
+  TITLE = {The Rust Programming Language},
+  AUTHOR = {Steve Klabnik,Carol Nichols,Chris Krycho},
+  YEAR = {2022},
+  PUBLISHER = {No Starch Press},
+}
+
+
+@article{BIGO,
+  author={Avigad,J. and Donnelly,K.},
+  year={2004},
+  title={Formalizing O notation in Isabelle/HOL},
+  journal={AUTOMATED REASONING, PROCEEDINGS},
+  volume={3097},
+  pages={357-371},
+  abstract={We describe a formalization of asymptotic O notation using the Isabelle/HOL proof assistant.},
+  keywords={Computer Science; Computer Science, Artificial Intelligence; Science & Technology; Technology},
+  isbn={0302-9743},
+  language={English},
+}
+
+@article{MOGHADAM2024,
+  title = {Guards: Benchmarks for weighted grid-based pathfinding},
+  journal = {Expert Systems with Applications},
+  volume = {249},
+  pages = {123719},
+  year = {2024},
+  issn = {0957-4174},
+  doi = {https://doi.org/10.1016/j.eswa.2024.123719},
+  url = {https://www.sciencedirect.com/science/article/pii/S0957417424005852},
+  author = {Sajjad Kardani Moghadam, Morteza Ebrahimi and Daniel D. Harabor},
+  keywords = {Path finding, JPSW, Benchmark, Grid map, Video games, Path planning},
+  abstract = {The primary objective of this paper is to aid game developers in finding the most suitable pathfinding algorithm for their games. Despite recent advancements in this field, there are few available studies that can be compared due to the absence of a standard benchmark set for weighted environments. This paper presents a new dataset for pathfinding in weighted environments. Furthermore, an investigation was conducted into the impact of node weights on pathfinding speed, and a correlation between them was identified. The complexity added to the maps due to node weights was defined as weight complexity, and two metrics were introduced to estimate it. The weight correlation factor has been identified as the most effective metric for estimating the weight complexity of the map. Another contribution of this paper pertains to the development of a model for estimating the pathfinding speed of algorithms based on weight complexity. This was accomplished through the utilization of the non-linear least squares method, which was applied to create a model for each algorithm, considering both its average search time and weight correlation factor values associated with the map. Finally an overall score metric was developed by using the integral of the models, enabling the evaluation of different algorithms in various scenarios.}
+}
+
+@book{AlgorithmAnalysis,
+  author = {Robert S, Kevin W},
+  title = {Introduction to Programming in Java: An Interdisciplinary Approach},
+  publisher = {Addison-Wesley Professional},
+  year = {2017},
+  edition = {2},
+  chapter = {4.1},
+}
+
+
+@software{PFAlgo,
+author={Dr Daniel Harabor,Dr Michael Wybrow,Karan Batta,Jay Wingate},
+title={PFAlgoViz: A Debugging Visualiser for Pathfinding Search},
+year = {2022},
+url={https://pf-algo-viz.org/},
+}
+
+@ARTICLE{Sobel,
+  author={Kanopoulos, N. and Vasanthavada, N. and Baker, R.L.},
+  journal={IEEE Journal of Solid-State Circuits}, 
+  title={Design of an image edge detection filter using the Sobel operator}, 
+  year={1988},
+  volume={23},
+  number={2},
+  pages={358-367},
+  keywords={Image edge detection;Filters;CMOS technology;Clocks;Computer architecture;Detectors;Pipelines;High performance computing;Chip scale packaging;Silicon compiler},
+  doi={10.1109/4.996}
 }

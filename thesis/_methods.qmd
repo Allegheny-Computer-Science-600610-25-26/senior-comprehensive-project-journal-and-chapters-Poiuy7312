@@ -1,18 +1,399 @@
 # Method of approach
 
-This chapter answers the "how" question - how did you complete your project,
-including the overall design of your study, details of the algorithms and tools you
-have used, etc.  Use technical diagrams, equations, algorithms, and paragraphs of text
-to describe the research that you have completed. Be sure to number all figures and
-tables and to explicitly refer to them in your text.
 
-This should contain:
+## History
 
-* lists
-* with points
-* and more points
-  * possibly subpoints
+There are multiple parts to **Pathmaker** development of Pathmaker originally started as a simple pygame where you play tag against a computer and the goal is to avoid the computer for as long as possible. The idea for this project stemmed from this as a question on how should I handle the Pathfinding was constant because there was a dynamically changing environment so pre-computation like with a *nav-mesh* was not feesible. A-star needed to much time to complete when the computers goal was constantly changing.
 
-For those projects whose implications address social or moral issues (i.e. ethical
-standards, causes, effects), you will want to use this section to describe how you
-actively mitigated or considered these issues.
+![Board from Tag game](images/tag-board.jpg)
+The grid system implemented in the Pathmaker is based off of this pygame. 
+
+## User Interface
+
+![Pathmaker UI](images/Pathmaker-ScreenShot.png)
+
+### Components
+
+Most of the code for Pathmaker is user interface, as this project doesn't use very many libraries or external crates to function. This implementation solely relies on SDL2 as mentioned in previous chapters. This means that things such as buttons, sliders, text boxes, dropdown menus and checkboxes all needed to be implemented manually. These were all originally separately programmed and didn't share any common traits. This made it very difficult to add new features and modify existing ones. This is where the component trait comes in. All of these items are very similar in there structure and functions they may just display differently or in the case of dropdown menu uses the standard button within it's code. All of these share a trait which in rust is a shared characteristic or function that everything with that trait must implement. This allows for Pathmaker to iterate through a list or vector as there called in rust with items that have multiple types as while you can't have a vector or data container with multiple types such as a list of strings and integers, with traits you can have the list be dynamically typed and you can have vector of things that have the same trait. This allows the compiler to know what to expect so since everything with the component trait has a draw function with the same arguments and return type. I can iterate through that vector and call the draw function. This makes it a lot easier to track user inputs and clicks instead of having to separate a standard button from a dropdown they can all be stored with in the same container and checked iteratively since everything with component trait has an on click function. This leads into a bit higher level implementation of these items.
+
+#### Complex Components and Interface
+
+There are more complex interface components such as a file explorer or dropdown that may have other components stored within them and have vastly different functionality then something like a checkbox or standard button.
+
+##### Sliders 
+
+Sliders allow for a controlled numbered input for allowing users to control things such as the weight of specific tiles or the range of weights that program generates when generating a board. This allows for a much more controllable input then something like a text input where a user can type what the value they want. This allows Pathmaker to put limits on what can be inputed and lowers the possibilite of errors if they aren't properly handled if an invalid or unexpected input is giving. But there are Input boxes that users can type in select circumstances.
+
+##### Input Box
+
+Input boxes are simply components where a user can type information into and it saves what is typed. These are mostly used in the file explorer in order to be able to jump to a location in a users computer without having to click through a ton of buttons. These work by when they are clicked_on they are considered active and it activates SDL's built in text-input subsystem allowing things to be typed. Then when a user presses enter it deactivates and depending on the purpose of that Input box act accordingly.
+
+##### File Explorer
+
+In order for users to be able to save and select files for use in Pathmaker it needed to have a way to retrieve the files from computers. Usually an easy way to do this is to use a computers built in file explorer, however as most of development of Pathmaker uses WSL or Windows Subsystem for Linux. This caused issues with opening the proper file explorer and trying to retrieve files from a part of the computer that doesn't use the same path conventions and the program not being able to properly get what operating system the computer uses. So instead Pathmaker has it's own file explorer that walks through a users files before running and splits them into a Hashmap with each key, value pair having the path to that location and any children so files or other directories that are located within the part of the computer. At first the file explorer just displayed every single file at once and would have a dropdown for directories to get to more files. This caused major performance issues because of how many files the program would have to render at once so in order to fix this it now uses the hashmap as said before and which ever directory is currently the set display it displays the children of that key and if it's a directory it's changes the key and displays that directories children then if it's a file it attempts to retrieve the information of that file.
+
+### Widgets
+
+While being able to draw and check if something is clicked on easily was solved by the component and interface traits respectively. There was another issue on how the UI is formatted and what are the size of the buttons where do they appear on the screen how to they react to the window size changing. This is where widgets come in, widgets are like a container for the interface components similar to something like a flex box or grid in HTML. These allow for easy implementation of new UI components and menus as you can set the overall size of the widget and location. Give it a vector of components and where you want them to formatted within the widget and widgets will calculate the size, location and layout of all of them allowing for things to be easily grouped together and well formatted and also allowing for a more reactive UI for different screen sizes.
+
+Widgets also make checking which button is clicked easier. This is because widgets format things by taking how many rows and columns it needs to be formatted it in, so if I give the format information and it's two cells high and three cells wide it will divide those by the widgets height and width to know how large each cell in the widget is. It then makes a hashmap based on the location of these cells with a value of which interface component is associated or located within that cell. Since every cell is the same height and width you can calculate what is the origin location of the cell or the top left corner of it and immediately know witch component was clicked on without having to iterate through everyone and seeing the mouse location is within there specified bounds.
+
+```rust
+let rows = self.layout.len() as u32;
+let cols = self.layout[0].len() as u32;
+let cell_height = self.height / rows as u32;
+let relative_x = mouse_state.x() - self.location.x();
+let relative_y = mouse_state.y() - self.location.y();
+
+if relative_x < 0 || relative_y < 0 {
+  return result;
+}
+
+let cell_x = relative_x / cell_width as i32;
+let cell_y = relative_y / cell_height as i32;
+
+if cell_x >= cols as i32 || cell_y >= rows as i32 {
+  return result;
+}
+let pos: (i32, i32) = (cell_x, cell_y);
+```
+
+This makes the program run a lot smoother and faster as there is no iteration required and there is now a constant amount of time it takes to find the button clicked on. So widgets make the program easier to add features and menus aswell as make Pathmaker more efficient in how it knows which button was clicked.
+
+### Marking Components as Dirty
+
+As mentioned previously before the board and store a value known as dirty in order to know if a component needs to be redrawn. This is so the program doesn't waste time on drawing components that haven't changed from a previous iteration and therefore wouldn't change in appearance to the user if redrawn. SDL doesn't remove things every frame and when drawing something new it's simply drawn on top of what was previously there.
+This means that if a menu pops up when the menu is exited everything behind that menu needs to be marked as dirty in order to be drawn on top have the menu actually hidden from view of the user. This causes another issue where components may sometimes overlap, so as a result you need to check if the component is active/currently usable.
+
+```rust
+fn draw<'a>(
+        &self,
+        canvas: &mut Canvas<Window>,
+        texture_creator: &'a TextureCreator<WindowContext>,
+        mouse_position: Point,
+        font: &mut ttf::Font<'_, 'static>,
+    ) {
+        let hovering = self.mouse_over_component(mouse_position);
+        if self.is_hovering() != hovering {
+            self.change_drawn(false);
+            self.change_hover(hovering);
+        }
+        if self.is_drawn() {
+            return;
+        }
+
+        let button_background: Rect = self.get_rect(self.location);
+        let available_width = (self.width as i32 - 10) as u32;
+        let text_len = self.text.chars().count() as u32;
+        let font_size = calculate_scaled_font_size(text_len, available_width);
+        let button_outline =
+            Rect::from_center(button_background.center(), self.width + 5, self.height + 5);
+        let mut text_map = Rect::from_center(button_background.center(), font_size, 20);
+        if text_map.width() >= button_background.width() {
+            text_map.set_width(button_background.width());
+        }
+        font.set_style(sdl2::ttf::FontStyle::BOLD);
+        canvas.set_draw_color(Color::RGB(0, 0, 0));
+        canvas.fill_rect(button_outline).unwrap();
+
+        let font_surface: Surface<'_>;
+
+        // render a surface, and convert it to a texture bound to the canvas
+        if hovering {
+            canvas.set_draw_color(WHITE);
+            canvas.fill_rect(button_background).unwrap();
+            font_surface = if self.cached_texture.is_none() {
+                font.render(&self.text)
+                    .blended(BLACK)
+                    .map_err(|e| e.to_string())
+                    .unwrap()
+            } else {
+                // Use cached texture
+                return;
+            }
+        } else {
+            canvas.set_draw_color(self.background_color);
+            canvas.fill_rect(button_background).unwrap();
+            font_surface = if self.cached_texture.is_none() {
+                font.render(&self.text)
+                    .blended(self.text_color)
+                    .map_err(|e| e.to_string())
+                    .unwrap()
+            } else {
+                // Use cached texture
+                return;
+            }
+        }
+
+        let font_texture: Texture<'_> = texture_creator
+            .create_texture_from_surface(&font_surface)
+            .map_err(|e| e.to_string())
+            .unwrap();
+        canvas
+            .copy(&font_texture, None, text_map)
+            .expect("Button unable to display text");
+        self.change_drawn(true);
+    }
+```
+
+### Checking if a component is active
+
+Each component also has an active value which similar to dirty is either true or false. Since SDL simply draws things on top of others and doesn't actually remove things from the window. Lets say I'm on the base menu and I wan't to save file when I click save file it loads a different menu but that menu is location above the board so if the board wasn't deactivated the program would think the board was being clicked an update accordingly despite the part being clicked on not being visible to the user. So to solve this components don't react to being clicked on unless they are considered active.
+
+```rust
+fn on_click(&mut self, mouse_position: Point) -> (bool, Option<String>) {
+        return (
+            self.mouse_over_component(mouse_position),
+            Some(self.get_id()),
+        );
+    }
+
+    fn mouse_over_component(&self, mouse_position: Point) -> bool {
+        let component: Rect = self.get_rect(self.location);
+        return component.contains_point(mouse_position) && self.active;
+    }
+```
+
+### Storing component information after first draw
+
+In many of the component there is something that says something like `pub cached_texture: Option<Texture<'static>>` or `cached_rectangle: Option<Rect>`. Once a component is drawn it may cache some of the information computed by the draw function so it doesn't have to be computed later unless necessary so if the texture for the text displayed on a button has already been created it won't have to be computed again unless it changes or in the case of tile or gameboard storing the the rectangle that is used to draw them so it doesn't need to be computed again unless it's location or size changes. The gameboard also caches grid information as the grid is set up by the board and has to be computed leading to code that looks something like this.
+
+```rust
+pub fn grid(&self) -> HashMap<(i32, i32), Tile> {
+        if let Some(map) = self.cached_grid.borrow().as_ref() {
+            return map.clone(); // Only clone if needed
+        }
+        let mut grid = HashMap::new();
+        let tile_width = self.tile_width();
+        let tile_height = self.tile_height();
+        for i in 0..self.tile_amount_x {
+            for j in 0..self.tile_amount_y {
+                let position: (i32, i32) = (i as i32, j as i32);
+                let num: u8 = 1;
+                grid.insert(
+                    position,
+                    Tile::new(
+                        position,
+                        TileType::Floor,
+                        tile_height,
+                        tile_width,
+                        num,
+                        true,
+                    ),
+                );
+            }
+        }
+        grid
+    }
+```
+
+### The Game Board
+
+The main feature of Pathmaker or at least the central visual component the gameboard functions very similarly to a widget. The game board itself is a component so it has an on_click function and the ability to change the height and width of it like every other component. It however isn't an interface trait and implements its own personal draw function and has a lot of functions specific to the game board. The game board is made up of tiles tiles are structure that track the TileType, height,width, weight and also cached tile. The board has hashmap with the location of the tiles with a value of the actual tile structure itself. This allows the gameboard to just be a manager of the tiles and similar to the Widgets every tile has the same size meaning when clicked on if you want to draw an obstacle on the board add an agent or add a goal for said agent you can use the same equation as the widgets to know which tile was clicked on and point to it in the hashmap. The Game board has the most amount of parts to it out of any of the components meaning it is very important to make sure it isn't being updated and iterating through the tiles unless absolutely needed. Each tile also stores a value called dirty that is either true or false, this is used to tell the program if a tile needs to be redrawn or not. So if the TileType changes or the location of the board changes the tiles would be marked as dirty and be redrawn on the next iteration of the program. While the board still needs to iterate through all the tiles to check if they need to be drawn it does save time to not have to draw every single one if not necessary. Widgets and the other interface components use a similar system where they are marked dirty if the need to be redrawn.
+
+#### Tile Structure
+```rust
+pub struct Tile {
+    pub position: (i32, i32),
+    tile_type: TileType,
+    height: u32,
+    width: u32,
+    pub weight: u8,
+    dirty: bool,
+    cached_rectangle: Option<Rect>,
+}
+```
+
+#### Saving and Loading Game Boards
+
+The game board can also be saved as a json file below is an example of what that file looks like although shortened as they can be a couple thousand lines long.
+
+```json
+{
+  "height": 800,
+  "width": 800,
+  "tile_amount_x": 40,
+  "tile_amount_y": 40,
+  "starts": [
+    [
+      17,
+      25
+    ]
+  ],
+  "goals": [
+    [
+      18,
+      6
+    ]
+  ],
+  "multiple_agents": false,
+  "multiple_goals": false,
+  "tiles": [
+    [
+      "3,8",
+      "Floor",
+      "1"
+    ],
+    [
+      "21,2",
+      "Floor",
+      "1"
+    ],
+  ]
+}
+```
+
+In order for Pathmaker to achieve this it uses the serde crate for rust allowing for the easy creation and parsing of json files. The gameboard implements the Serialize and Deserialize traits from serde,this allows the board information to be automatically written and formatted into a json using the functions provided by said crate and can also be read and converted into a game board structure. The file doesn't save everything else about a board can be computed during runtime and doesn't need to be known before hand.
+
+```rust
+// Reading a json file and creating a board structure from it
+let result: Board = serde_json::from_str(&board_json).expect("yes");
+```
+
+```rust
+// Save board information as json formatted string.
+let json = serde_json::to_string_pretty(&self)?;
+```
+
+While the UI is the largest part of the program for Pathmaker and is primarily what user's will interact with it is not the main purpose of Pathmaker. That comes in the form of actually benchmarking the environments and algorithms created by the user. So how does Pathmaker actually do that?
+
+## Benchmarking
+
+The benchmarking in Pathmaker takes inspiration from Guards a benchmarking framework designed for weighted grids and designed to help developers decide on what algorithms to use within a videogame[@MOGHADAM2024]. While pathmaker doesn't use actual guards as described in the paper which are essentially points on a map that effect the weight areas around which is essentially the traversal cost a higher traversal cost equaling difficult terrain or some sort of difficulty navigating. Pathmaker does use a weighted grids,obstacles and calculates the WCF value of given maps or generated ones. WCF being the weight complexity of a grid this is calculated by taking the weight gradient of tiles or how much tiles close together weights differ from one another and calculating how complex or how difficult it would be for something like A* to navigate or find the shortest path. Weight gradient is important because having drastically different weights actually lowers complexity because if a weight is too high it functionally acts as being impassable and algorithms like A* will functionally ignore it. So having minor difference in weights actually makes it more difficult because it becomes harder to tell which path has a better chance of leading to a the shortest path. The gradient is calculated using the Sobel operation[@Sobel]. This gives tiles directly next to the tile a higher effect on it's gradient you then iterate through all usable tiles ignoring impassable one like obstacles. You essentially add the weights of all tiles withing the current operation multiply them by there given weight values which can be -2,-2,0,1 and 2.
+
+### WCF Value
+
+The Sobel operation uses two different convolutions to represent vertical changes and horizontal changes you calculate both for each passable tile on the board.
+$$
+Gx = 
+\begin{bmatrix}
+-1 & 0 & +1 \\
+-2 & 0 & +2 \\
+-1 & 0 & +1
+\end{bmatrix} * M
+$$
+
+$$
+Gy = 
+\begin{bmatrix}
+-1 & -2 & -1 \\
+0 & 0 & 0 \\
++1 & +2 & +1
+\end{bmatrix} * M
+$$
+
+You can then get the total weight gradient for that tile by squaring the vertical convolution and horizontal convolution adding them together and getting the square root.
+
+$$
+G = \sqrt{G_{x}^2 + G_{y}^2} 
+$$
+
+$n = \text{Passable tiles}$
+$$
+C_i =  \begin{cases}
+0, \text{if}\space G_i\space \text{is}\space 0
+\newline
+1 - 0.01 * log_2(G_i)
+\end{cases}
+$$
+$$
+WCF = \frac{\sum_i^n C_i}{t_m} 
+$$
+
+```rust
+pub fn sobel_method(grid: &HashMap<(i32, i32), Tile>) -> f64 {
+    // Convolution Kernals
+    const X_KERNEL: [[i32; 3]; 3] = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]];
+    const Y_KERNEL: [[i32; 3]; 3] = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
+    const WEIGHT_FACTOR: f64 = 0.01;
+    // Get Traversable Nodes
+    let traversable_count = grid.values().filter(|a| a.is_floor()).count() as f64;
+
+    let mut c_value: f64 = 0.0;
+
+    // Iterate grid directly instead of using coordinates
+    for (&(c, r), _) in grid.iter() {
+        let mut weight_conv_x = 0;
+        let mut weight_conv_y = 0;
+
+        // Inline the neighbor offsets to avoid allocations
+        let deltas = [
+            (-1, -1),
+            (0, -1),
+            (1, -1),
+            (-1, 0),
+            (0, 0),
+            (1, 0),
+            (-1, 1),
+            (0, 1),
+            (1, 1),
+        ];
+        if let Some(tile) = grid.get(&(c, r)) {
+            if !tile.is_floor() {
+                continue;
+            }
+        }
+
+        for (idx, &(dc, dr)) in deltas.iter().enumerate() {
+            let neighbor_pos = (c + dc, r + dr);
+            if let Some(tile) = grid.get(&neighbor_pos) {
+                if tile.is_floor() {
+                    let col = (idx % 3) as usize;
+                    let row = (idx / 3) as usize;
+                    let weight = tile.weight as i32;
+                    weight_conv_x += weight * X_KERNEL[row][col];
+                    weight_conv_y += weight * Y_KERNEL[row][col];
+                }
+            }
+        }
+
+        let g_value =
+            ((weight_conv_x * weight_conv_x + weight_conv_y * weight_conv_y) as f64).sqrt();
+        if g_value != 0.0 {
+            c_value += 1.0 - WEIGHT_FACTOR * g_value.log2();
+        }
+    }
+
+    return c_value / traversable_count;
+}
+```
+
+### Memory used and Time Taken
+
+Pathmaker also track the amount of allocated memory taken up by the algorithm being run. This is done using the jemallocator crate, this allows for pathmaker to track allocated memory on specific threads allowing for easier tracking and less errors as it can cause a problem if total memory is being tracked and it can equal more than the memory allocated within the current thread. Currently pathmaker keeps track of the amount of memory allocated in bytes but it does not track ram usage. Time is tracked by using the rust standard time library and tracking how much time passes when the pathfinding algorithm is run.
+
+```rust
+let now = Instant::now();
+epoch::advance().unwrap() // Update memory statistics
+let before = allocated.read().unwrap().get();
+let (path, steps) = get_algorithm(algorithm).find_path(self.start, self.goal, &map);
+epoch::advance().unwrap(); // Update memory statistics
+let after = allocated.read().unwrap().get();
+let time = now.elapsed();
+```
+
+### Steps taken
+
+The built in algorithms count each step taking and return it when the find a path. This allows Pathmaker to track how many steps it took for an algorithm to find a path or complete. 
+
+### Total path cost
+
+After the algorithm specified by the user is done computing a path that path is sent to function to take all of the moves stored within the path and getting the weights from the grid and summing them together to get the overall traversal cost of the path found.
+
+```rust
+fn get_overall_path_weight(path: &Vec<(i32, i32)>, map: &HashMap<(i32, i32), Tile>) -> u128 {
+    let mut total_weight: u128 = 0;
+    for moves in path {
+        if let Some(tile) = map.get(&moves) {
+            total_weight += tile.weight as u128;
+        }
+    }
+    return total_weight;
+}
+```
+
+
+
+## Data analysis
+
+TODO:
