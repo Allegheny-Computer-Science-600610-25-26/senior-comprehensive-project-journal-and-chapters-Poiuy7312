@@ -82,58 +82,8 @@ fn draw<'a>(
             return;
         }
 
-        let button_background: Rect = self.get_rect(self.location);
-        let available_width = (self.width as i32 - 10) as u32;
-        let text_len = self.text.chars().count() as u32;
-        let font_size = calculate_scaled_font_size(text_len, available_width);
-        let button_outline =
-            Rect::from_center(button_background.center(), self.width + 5, self.height + 5);
-        let mut text_map = Rect::from_center(button_background.center(), font_size, 20);
-        if text_map.width() >= button_background.width() {
-            text_map.set_width(button_background.width());
-        }
-        font.set_style(sdl2::ttf::FontStyle::BOLD);
-        canvas.set_draw_color(Color::RGB(0, 0, 0));
-        canvas.fill_rect(button_outline).unwrap();
-
-        let font_surface: Surface<'_>;
-
-        // render a surface, and convert it to a texture bound to the canvas
-        if hovering {
-            canvas.set_draw_color(WHITE);
-            canvas.fill_rect(button_background).unwrap();
-            font_surface = if self.cached_texture.is_none() {
-                font.render(&self.text)
-                    .blended(BLACK)
-                    .map_err(|e| e.to_string())
-                    .unwrap()
-            } else {
-                // Use cached texture
-                return;
-            }
-        } else {
-            canvas.set_draw_color(self.background_color);
-            canvas.fill_rect(button_background).unwrap();
-            font_surface = if self.cached_texture.is_none() {
-                font.render(&self.text)
-                    .blended(self.text_color)
-                    .map_err(|e| e.to_string())
-                    .unwrap()
-            } else {
-                // Use cached texture
-                return;
-            }
-        }
-
-        let font_texture: Texture<'_> = texture_creator
-            .create_texture_from_surface(&font_surface)
-            .map_err(|e| e.to_string())
-            .unwrap();
-        canvas
-            .copy(&font_texture, None, text_map)
-            .expect("Button unable to display text");
-        self.change_drawn(true);
-    }
+        // Draw code here
+}
 ```
 
 ### Checking if a component is active
@@ -234,11 +184,6 @@ The game board can also be saved as a json file below is an example of what that
       "Floor",
       "1"
     ],
-    [
-      "21,2",
-      "Floor",
-      "1"
-    ],
   ]
 }
 ```
@@ -257,9 +202,84 @@ let json = serde_json::to_string_pretty(&self)?;
 
 While the UI is the largest part of the program for Pathmaker and is primarily what user's will interact with it is not the main purpose of Pathmaker. That comes in the form of actually benchmarking the environments and algorithms created by the user. So how does Pathmaker actually do that?
 
+## Implementing Pathfinding Algorithms
+
+Pathmaker has a couple of built in pathfinding algorithms such as a modified greedy search, A* and Breadth-first-search. Greedy search is the simplest implementation and it's performance isn't affected by weight complexity but it also has the most pitfalls. 
+
+### Greedy Search
+
+Greedy search is the only algorithm that doesn't take into account tile weight as greedy search is basically if something gets it's closer to it's goal then it will take that step even if that sets it back in the long run. So using something like tile weights and having it go to the tile with the smallest weight around it wouldn't try to reach the goal. So instead greedy search is purely location based so if a tile next to it is closer to the goal it will go to that one not accounting for weight the code for this is below.
+
+```rust
+for neighbor in &neighbors {
+    if (neighbor.0 - goal.0).abs() < (current.0 - goal.0).abs()
+        || (neighbor.1 - goal.1).abs() < (current.1 - goal.1).abs()
+        {
+        good_moves.push(*neighbor);
+        break;
+    } else {
+        bad_moves.push(*neighbor);
+    }
+}
+```
+This system works for grids with a minimal amount of obstacles a problem occurs when it runs into a situation where no move it can make gets it closer to the goal. This would result in the algorithm getting stuck and not making another move, in order to solve this if this occurs it will pick a random move and put the previous tile in a blacklist so it no longer considers that tile a possible move.
+
+```rust
+if let Some(chosen_move) = good_moves.choose(&mut rand::rng()) {
+    current = *chosen_move;
+    path.push(*chosen_move);
+} else if let Some(chosen_move) = bad_moves.choose(&mut rand::rng()) {
+    black_list.push(current);
+    current = *chosen_move;
+    path.push(*chosen_move);
+}
+```
+
+This works to get around a majority of obstacles but as the board increasingly fills with obstacles there can be an issue where the algorithm blacklists a tile that is required to reach it's goal making it impossible and causing the algorithm to run forever. As a result greedy search can cause an infinite loop within the program if a grid has too many obstacles or it is put into a specific situations. Algorithms like A* and Breadth-First don't have such issues.
+
+
+
+### Breadth-first-search
+
+Breadth first search is very simple in concept but functions in a lot more situations then something like greedy search. Pathmakers implementation works by using a VecDeque which in rust is basically a list but it has an end on both sides. This makes it easier to get the first value in a list of items and remove it. Essentially BFS works by getting the start tile getting it's neighbors checking if there the goal and then checking the neighbors of those neighbors until it finds the goal.
+
+```rust
+for neighbor in neighbors {
+    if let Some(tile) = map.get(&neighbor) {
+        if tile.is_traversable() && !visited.contains(&neighbor) {
+            visited.insert(neighbor);
+            parent.insert(neighbor, current);
+            queue.push_back(neighbor);
+        }
+    }
+}
+```
+BFS is the same as greedy search in which the weight of a tile is unimportant to it as it is not designed to find the shortest but to find a path in general. It still has it's uses as a feature of BFS is that it only checks a tile once making it useful for seeing if a giving grid or path is possible, which is used extensively within Pathmaker. Unlike BFS and Greedy search there are algorithms where finding the shortest path is the goal and are implemented in Pathmaker such as A-star.
+
+### A-star
+
+A-star works by estimating the path cost of every node when searching. So at the start node it will get the manhattan distance between the start and the goal ignoring obstacles. This is stored in a BinaryHeap to function like a priority queue meaning it orders the heap by a value which in this case is the cost of a node. Which at the start is the Manhattan distance of the node. It will then get the last value in the heap and since it is ordered the last value is the lowest cost. At the start this doesn't mean much but it will then get all the neighbors of that current tile and iterate through them it will then track there weight. It will then try and estimate a g_value which for each tile is stored in a HashMap if the tile hasn't been explored yet it won't have a g-value and it will default to the maximum value allowed by a i32 integer. It will then get the g-score of the current tile which at the start is zero and the weight of the current neighbors weight to that value this is known as the tentative_g. It then checks if the tentative_g is less than the neighbors g-score which once again if the neighbor hasn't been visited yet is guaranteed to be higher. If this is true it will then set the cost of that neighbor to the tentative_g + the manhattan distance between the neighbor and the goal as seen below.
+
+```rust
+let tentative_g = g_score.get(&current).unwrap_or(&i32::MAX) + move_cost;
+if tentative_g < *g_score.get(&neighbor).unwrap_or(&i32::MAX) {
+    parent.insert(neighbor, current);
+    g_score.insert(neighbor, tentative_g);
+    let f = tentative_g + heuristic(neighbor, goal);
+    open_set.push(Node {
+        cost: f,
+        position: neighbor,
+    });
+}
+```
+It does this for every neighbor and then it will search the neighbor with the lowest estimated cost first. It continues to repeat this until the goal is reached. This method guarantees the A-star finds the shortest path between to points every time. A-star search is a very efficient algorithm but if it is a given an impossible path it can get stuck or run forever.
+
+
+
+
 ## Benchmarking
 
-The benchmarking in Pathmaker takes inspiration from Guards a benchmarking framework designed for weighted grids and designed to help developers decide on what algorithms to use within a videogame[@MOGHADAM2024]. While pathmaker doesn't use actual guards as described in the paper which are essentially points on a map that effect the weight areas around which is essentially the traversal cost a higher traversal cost equaling difficult terrain or some sort of difficulty navigating. Pathmaker does use a weighted grids,obstacles and calculates the WCF value of given maps or generated ones. WCF being the weight complexity of a grid this is calculated by taking the weight gradient of tiles or how much tiles close together weights differ from one another and calculating how complex or how difficult it would be for something like A* to navigate or find the shortest path. Weight gradient is important because having drastically different weights actually lowers complexity because if a weight is too high it functionally acts as being impassable and algorithms like A* will functionally ignore it. So having minor difference in weights actually makes it more difficult because it becomes harder to tell which path has a better chance of leading to a the shortest path. The gradient is calculated using the Sobel operation[@Sobel]. This gives tiles directly next to the tile a higher effect on it's gradient you then iterate through all usable tiles ignoring impassable one like obstacles. You essentially add the weights of all tiles withing the current operation multiply them by there given weight values which can be -2,-2,0,1 and 2.
+The benchmarking in Pathmaker takes inspiration from Guards a benchmarking framework designed for weighted grids and designed to help developers decide on what algorithms to use within a videogame[@MOGHADAM2024]. While pathmaker doesn't use actual guards as described in the paper which are essentially points on a map that effect the weight areas around which is essentially the traversal cost a higher traversal cost equaling difficult terrain or some sort of difficulty navigating. Pathmaker does use a weighted grids,obstacles and calculates the WCF value of given maps or generated ones. WCF being the weight complexity of a grid this is calculated by taking the weight gradient of tiles or how much tiles close together weights differ from one another and calculating how complex or how difficult it would be for something like A* to navigate or find the shortest path. Weight gradient is important because having drastically different weights actually lowers complexity because if a weight is too high it functionally acts as being impassable and algorithms like A* will functionally ignore it. So having minor difference in weights actually makes it more difficult because it becomes harder to tell which path has a better chance of leading to a the shortest path. The gradient is calculated using the Sobel operation[@Sobel]. This gives tiles directly next to the tile a higher effect on it's gradient you then iterate through all usable tiles ignoring impassable ones like obstacles. You essentially add the weights of all tiles withing the current operation multiply them by there given weight values which can be -2,-2,0,1 and 2.
 
 ### WCF Value
 
@@ -300,64 +320,6 @@ $$
 WCF = \frac{\sum_i^n C_i}{t_m} 
 $$
 
-```rust
-pub fn sobel_method(grid: &HashMap<(i32, i32), Tile>) -> f64 {
-    // Convolution Kernals
-    const X_KERNEL: [[i32; 3]; 3] = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]];
-    const Y_KERNEL: [[i32; 3]; 3] = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
-    const WEIGHT_FACTOR: f64 = 0.01;
-    // Get Traversable Nodes
-    let traversable_count = grid.values().filter(|a| a.is_floor()).count() as f64;
-
-    let mut c_value: f64 = 0.0;
-
-    // Iterate grid directly instead of using coordinates
-    for (&(c, r), _) in grid.iter() {
-        let mut weight_conv_x = 0;
-        let mut weight_conv_y = 0;
-
-        // Inline the neighbor offsets to avoid allocations
-        let deltas = [
-            (-1, -1),
-            (0, -1),
-            (1, -1),
-            (-1, 0),
-            (0, 0),
-            (1, 0),
-            (-1, 1),
-            (0, 1),
-            (1, 1),
-        ];
-        if let Some(tile) = grid.get(&(c, r)) {
-            if !tile.is_floor() {
-                continue;
-            }
-        }
-
-        for (idx, &(dc, dr)) in deltas.iter().enumerate() {
-            let neighbor_pos = (c + dc, r + dr);
-            if let Some(tile) = grid.get(&neighbor_pos) {
-                if tile.is_floor() {
-                    let col = (idx % 3) as usize;
-                    let row = (idx / 3) as usize;
-                    let weight = tile.weight as i32;
-                    weight_conv_x += weight * X_KERNEL[row][col];
-                    weight_conv_y += weight * Y_KERNEL[row][col];
-                }
-            }
-        }
-
-        let g_value =
-            ((weight_conv_x * weight_conv_x + weight_conv_y * weight_conv_y) as f64).sqrt();
-        if g_value != 0.0 {
-            c_value += 1.0 - WEIGHT_FACTOR * g_value.log2();
-        }
-    }
-
-    return c_value / traversable_count;
-}
-```
-
 ### Memory used and Time Taken
 
 Pathmaker also track the amount of allocated memory taken up by the algorithm being run. This is done using the jemallocator crate, this allows for pathmaker to track allocated memory on specific threads allowing for easier tracking and less errors as it can cause a problem if total memory is being tracked and it can equal more than the memory allocated within the current thread. Currently pathmaker keeps track of the amount of memory allocated in bytes but it does not track ram usage. Time is tracked by using the rust standard time library and tracking how much time passes when the pathfinding algorithm is run.
@@ -392,8 +354,32 @@ fn get_overall_path_weight(path: &Vec<(i32, i32)>, map: &HashMap<(i32, i32), Til
 }
 ```
 
+### Generating randomized boards
+
+In order to track how WCF effect things like memory used steps taken and overall path cost there needs to be multiple grids tested. Pathmaker has the ability to generate randomized grids with a specified weight range, amount of obstacles and amount of weighted tiles as well as the ability to run doubling experiments with said generated grids. 
+
+**Parameters**
+
+- **Weight Range:** Decides the range within weighted tiles can generate with max is *0 - 255* 
+- **Obstacle Count:** Amount of obstacles placed on generated board
+- **Weighted Tile Count:** Amount of non obstacle tiles with a weight greater than 1
+
+These parameters are important for controlling board complexity as the goal is to have boards generated with similar parameters to have a similar weight complexity. Higher weight range on average decreases weight complexity, Obstacle count often increases weight complexity as the board functionally becomes smaller, and the amount of weighted tiles increases complexity the more there are. Board size also has a significant impact on weight complexity with smaller boards being a lot more sensitive to changes in weights and larger boards if not weighted having a naturally lower wcf value.
 
 
-## Data analysis
+The game board does not generate random locations for the start and goals though are decided by the user, so a user specifies where the start and goals are and the Pathmaker will generate different grids with those in mind. There is a problem with generating randomized grids depending on the amount of obstacles specified to be on the board and especially with doubling experiments it may become impossible to find a valid path to a goal which can cause an infinite loop for algorithms if not caught. The estimated weight complexity for 40x40, 100x100,500x500 with all tiles having a weight of 1 is listed below.
 
-TODO:
+**40 x 40 (WCF):**  0.1056
+**100 x 100 (WCF):**  0.0404
+**500 x 500 (WCF):**  0.00789
+
+#### Avoiding Impossible Game Boards
+
+In order to get around this, there was really only one option for each start and goal pair specified on the board Pathmaker will run a breadth first search without tracking any of the benchmarks and if the number of steps ever equals or goes above the amount of passable nodes it considers it impossible to find a path. This works because breadth first search will search every possible tile until a path is found and will only check a tile once, so if the amount of steps ever equals the amount of passable tiles and nothings has been found then it's safe to assume there is no possible path to be found. There are other equations that can calculate every single possible path within a grid but these are computationally expensive and would be preferred if the board wasn't expected to change immediately afterwords so for a constantly changing board it would be inefficient to do this. But if an impossible board is given the program will generate another one until it is possible for all agents on the board to find there to there specified goal.
+
+There has also been a limit placed on doubling experiments because at some point it will become impossible or extraordinarily unlikely. So the amount of obstacles able to be on a board is currently capped by the equation below
+$$
+\text{Max number of Obstacles} = \frac{\text{Number of Tiles}}{2 * \text{Number of Agents}}
+$$
+
+Another way to do this would be to just make sure the minimum number of tiles to reach the goal is always present, the problem with this is that it still runs into the problem of being extremely unlikely to find a possible board and even if a possible board is found, the resulting board wouldn't be representative of real life and wouldn't make algorithms make any decisions as the only tiles they can move to will always be the correct one.

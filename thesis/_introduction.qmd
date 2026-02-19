@@ -36,7 +36,6 @@ Another way information can be represent is a probabilistic map. Where a map is 
 
 A navigation mesh (NavMesh) is a polygonal representation of walkable regions in a two-dimensional or three-dimensional environment [@BRANDSANDYTHESIS]. Instead of using grid cells a Navmesh represents walkable space into polygons in which a agent can't navigate unobstructed. It will often use a pathfinding algorithm such as A* to run between nodes that represent one of the polygons. These are often in used in videogames as there reduce search complexity and videogames often allow for precomputation for prebuilt maps allowing for less computation when running[@BRANDSANDYTHESIS].
 
-
 #### Scope of This Tool
 
 This project focuses exclusively on unweighted, two-dimensional grid environments. Such grids provide a simple, controlled experimental setting and avoid the substantial precomputation required for probabilistic roadmaps and navigation meshes. Although limited in representational power, this choice facilitates clear visualization and benchmarking, making the tool suitable for algorithmic analysis.
