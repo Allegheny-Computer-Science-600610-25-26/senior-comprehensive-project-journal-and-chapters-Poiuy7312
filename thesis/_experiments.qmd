@@ -32,7 +32,13 @@ Table: Grid types
 
 This is to help better represent real life scenarios a pathfinding algorithm may be used in to see how *PathMaker*s benchmarks perform and if they are accurate giving different types of grids.
 
-After getting all the configurations and generating a grid I ran every built in algorithm to *PathMaker* on each grid generated 10 times, this is to get a good average of there performance as performance can very depending on circumstances and isn't a constant. I did this for both city and random grids and had the results stored in a large csv file that stores the parameters and the memory,time,WCF, steps taken and overall path cost for each time an algorithm was run and successful. If a grid was generated that deemed to be impossible or an algorithm wasn't able to complete the task in a reasonable amount of time then that run was omitted from the results. As for analyzing and evaluating the data this was done by graphing the results in R.
+After getting all the configurations and generating a grid I ran every built in algorithm to *PathMaker* on each grid generated 10 times, this is to get a good average of there performance as performance can very depending on circumstances and isn't a constant. I did this for both city and random grids and had the results stored in a large csv file that stores the parameters and the memory,time,WCF, steps taken and overall path cost for each time an algorithm was run and successful an example of which can be seen below. If a grid was generated that deemed to be impossible or an algorithm wasn't able to complete the task in a reasonable amount of time then that run was omitted from the results. As for analyzing and evaluating the data this was done by graphing the results in R.
+
+```csv
+algorithm,grid_size,obstacle_pct,weighted_pct,weight_range,run,wcf,memory_bytes,time_ms,steps,path_cost
+A* search,64,0,25,10,0,0.496161,327656,13.5531,1405,510
+Breadth First Search,64,0,25,10,0,0.496161,8200,6.3206,58,765
+```
 
 ### Test Cases and Coverage
 
