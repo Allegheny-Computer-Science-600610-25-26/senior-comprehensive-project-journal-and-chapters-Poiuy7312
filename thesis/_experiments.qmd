@@ -157,4 +157,18 @@ For testing created maps and showing results there are test cases for this but a
 
 ## Threats to Validity
 
+### Reliance on Crates and C-Libraries
+
+As with most tools *PathMaker* relies on rust crates and the SDL2 C-libraries while the rust crate for SDL2 is actively being worked on and maintained SDL2 itself is no longer being maintained and they have moved on to SDL3. This isn't a huge issue for PathMaker as while the UI is important there are many things that can replace SDL2 if it ever becomes unusable such as SDL3 or possibly as rust base graphics library.
+
+### Changes to Operating System
+
+OS updates also pose a threat to *PathMaker* as libraries may be deprecated for example if Mac stops using HarfBuzz and it becomes deprecated on new Mac systems this will immediately break *Pathmaker* for MacOs because SDL2_TTF relies on HarfBuzz for font implementation. Most of this can be avoided by static linking every dependency for *Pathmaker* so users don't need to install outside libraries to run it. But if a library that is natively installed on a OS that PathMaker relies on is removed or deprecated this would cause problems and would have to be manually installed by the user.
+
+### Unable to upload maps directly from other tools
+
+While *PathMaker* allow users to create, save and upload maps created within the tool. If someone has a map created in something like a game engine they can't currently upload the map to *Pathmaker* without manually drawing it out on the board. Making it difficult to test already created maps and making it a chore to make new ones.
+
+### Flaws with PathMaker
+
 Threats to validity are related to the generated nature of maps for the experiments as while there's an attempt to have as much control as possible over what is generated while keeping it relatively random. It's still not perfect and could make testing algorithms and making sure there implemented correctly more difficult then using set grids. But based on the results of the running many different scenarios the results of the algorithm are consistent with how there expected to preform leaving me with confidence that they are correctly implemented. 

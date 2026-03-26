@@ -10,7 +10,7 @@ The grid system implemented in the *PathMaker* is based off of this pygame.
 
 ## User Interface
 
-![*PathMaker* UI](images/PathMaker-ScreenShot.png)
+![*PathMaker* UI](images/Pathmaker-ScreenShot.png)
 
 ### Components
 
