@@ -30,7 +30,7 @@ author:
       postal-code: 16335
 
 abstract: |
-  A well-researched student project. Like very.
+  Pathfinding algorithms are fundamental to navigation systems, video game AI, and robotics. However, developers and researchers currently lack dedicated tools for analyzing, developing, and benchmarking these algorithms in controlled environments. Existing solutions range from educational visualizers lacking analytical capabilities to full-featured game engines with steep learning curves. This paper presents PathMaker, a specialized tool for pathfinding algorithm analysis built using Rust and SDL2. PathMaker enables users to create, edit, and save two-dimensional grid-based maps with configurable obstacles, weighted terrain, and multiple agent/goal configurations. The tool includes implementations of several pathfinding algorithms, including A*, Breadth-First Search, Greedy Search, and Jump Point Search with caching (JPSW). PathMaker provides comprehensive benchmarking through metrics such as computational time, memory allocation, step count, and total path cost. It also calculates the Weight Complexity Factor (WCF) of generated maps using Sobel operations to quantify terrain difficulty. To support controlled experimentation, PathMaker includes map generation capabilities with adjustable parameters for obstacle density and weight distribution, along with validation to ensure solvable configurations. The tool aims to bridge the gap between basic visualizers and complex game engines, providing a focused research environment for pathfinding algorithm development and analysis.
 ---
 
 {{< include _introduction.qmd >}}
