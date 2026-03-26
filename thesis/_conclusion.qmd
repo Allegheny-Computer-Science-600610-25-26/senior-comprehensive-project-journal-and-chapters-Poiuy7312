@@ -53,4 +53,4 @@ As mentioned previously when talking about a web-assembly version, *PathMaker* i
 
 ### Difficulty testing on Multiple Operating System
 
-Currently as one person it's very difficult to properly test on different operating systems, while I have the ability to test on Linux and Windows easily, MacOS present a problem as not only does mac work significantly differently then linux and windows when it comes to how it interacts to SDL2 but it's also the hardest to test in verify due to most apple products being very proprietary and being difficult to have a virtual machine of a Mac.
+Currently as one person it's very difficult to properly test on different operating systems, while I have the ability to test on Linux and Windows easily, MacOS present a problem as not only does mac work significantly differently then linux and windows when it comes to how it interacts to SDL2 but it's also the hardest to test in verify due to most apple products being very proprietary and being difficult to have a virtual machine of a MacOS.
