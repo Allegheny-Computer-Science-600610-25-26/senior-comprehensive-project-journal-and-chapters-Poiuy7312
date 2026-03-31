@@ -1,20 +1,25 @@
 # Method of approach
 
-
 ## History
 
 There are multiple parts to *PathMaker* development of *PathMaker* originally started as a simple pygame where you play tag against a computer and the goal is to avoid the computer for as long as possible. The idea for this project stemmed from this as a question on how should I handle the Pathfinding was constant because there was a dynamically changing environment so pre-computation like with a *nav-mesh* was not feesible. A-star needed to much time to complete when the computers goal was constantly changing.
 
 ![Board from Tag game](images/tag-board.jpg)
-The grid system implemented in the *PathMaker* is based off of this pygame. 
+The grid system implemented in the *PathMaker* is based off of this pygame and is the original inspiration for this project.
+
+## System Architecture
+
+![System Diagram](images/PathMaker-Diagram.png)
+
+PathMaker has two main pieces being the UI and the Benchmarking components, The UI is used to change settings and update the board as well as create boards for the benchmarks to be run on and also to select how many times a benchmark should be run. I'm going to start by explaining the UI as it's the largest part of PathMaker despite being a secondary feature and not it's main purpose.
 
 ## User Interface
 
-![*PathMaker* UI](images/Pathmaker-ScreenShot.png)
+![*PathMaker* UI](images/PathMakerUI.png)
 
 ### Components
 
-Most of the code for *PathMaker* is user interface, as this project doesn't use very many libraries or external crates to function. This implementation solely relies on SDL2 as mentioned in previous chapters. This means that things such as buttons, sliders, text boxes, dropdown menus and checkboxes all needed to be implemented manually. These were all originally separately programmed and didn't share any common traits. This made it very difficult to add new features and modify existing ones. This is where the component trait comes in. All of these items are very similar in there structure and functions they may just display differently or in the case of dropdown menu uses the standard button within it's code. All of these share a trait which in rust is a shared characteristic or function that everything with that trait must implement. This allows for *PathMaker* to iterate through a list or vector as there called in rust with items that have multiple types as while you can't have a vector or data container with multiple types such as a list of strings and integers, with traits you can have the list be dynamically typed and you can have vector of things that have the same trait. This allows the compiler to know what to expect so since everything with the component trait has a draw function with the same arguments and return type. I can iterate through that vector and call the draw function. This makes it a lot easier to track user inputs and clicks instead of having to separate a standard button from a dropdown they can all be stored with in the same container and checked iteratively since everything with component trait has an on click function. This leads into a bit higher level implementation of these items.
+Most of the code for *PathMaker* is user interface the result of which you can see above, as this project doesn't use very many libraries or external crates to function. This implementation solely relies on SDL2 as mentioned in previous chapters. This means that things such as buttons, sliders, text boxes, dropdown menus and checkboxes all needed to be implemented manually. These were all originally separately programmed and didn't share any common traits. This made it very difficult to add new features and modify existing ones. This is where the component trait comes in. All of these items are very similar in there structure and functions they may just display differently or in the case of dropdown menu uses the standard button within it's code. All of these share a trait which in rust is a shared characteristic or function that everything with that trait must implement. This allows for *PathMaker* to iterate through a list or vector as there called in rust with items that have multiple types as while you can't have a vector or data container with multiple types such as a list of strings and integers, with traits you can have the list be dynamically typed and you can have vector of things that have the same trait. This allows the compiler to know what to expect so since everything with the component trait has a draw function with the same arguments and return type. I can iterate through that vector and call the draw function. This makes it a lot easier to track user inputs and clicks instead of having to separate a standard button from a dropdown they can all be stored with in the same container and checked iteratively since everything with component trait has an on click function. This leads into a bit higher level implementation of these items.
 
 #### Complex Components and Interface
 
@@ -39,31 +44,31 @@ While being able to draw and check if something is clicked on easily was solved 
 Widgets also make checking which button is clicked easier. This is because widgets format things by taking how many rows and columns it needs to be formatted it in, so if I give the format information and it's two cells high and three cells wide it will divide those by the widgets height and width to know how large each cell in the widget is. It then makes a hashmap based on the location of these cells with a value of which interface component is associated or located within that cell. Since every cell is the same height and width you can calculate what is the origin location of the cell or the top left corner of it and immediately know witch component was clicked on without having to iterate through everyone and seeing the mouse location is within there specified bounds.
 
 ```rust
-let rows = self.layout.len() as u32;
-let cols = self.layout[0].len() as u32;
-let cell_height = self.height / rows as u32;
-let relative_x = mouse_state.x() - self.location.x();
-let relative_y = mouse_state.y() - self.location.y();
+let rows = self.layout.len() as u32; // Get number of rows
+let cols = self.layout[0].len() as u32; // Get number of columns
+let cell_height = self.height / rows as u32; // Get the cell height for the widget
+let relative_x = mouse_state.x() - self.location.x(); // get mouse position x in comparison to widget location
+let relative_y = mouse_state.y() - self.location.y(); // get mouse position y in comparison to widget location
 
 if relative_x < 0 || relative_y < 0 {
-  return result;
+  return result; // Checks if mouse is within the widgets bounds
 }
 
-let cell_x = relative_x / cell_width as i32;
-let cell_y = relative_y / cell_height as i32;
+let cell_x = relative_x / cell_width as i32; // Gets the cell x the mouse position corresponds too
+let cell_y = relative_y / cell_height as i32;  // Gets the cell y the mouse position corresponds too
 
 if cell_x >= cols as i32 || cell_y >= rows as i32 {
-  return result;
+  return result;  // Checks if mouse is within the widgets bounds
 }
 let pos: (i32, i32) = (cell_x, cell_y);
 ```
 
-This makes the program run a lot smoother and faster as there is no iteration required and there is now a constant amount of time it takes to find the button clicked on. So widgets make the program easier to add features and menus aswell as make *PathMaker* more efficient in how it knows which button was clicked.
+This makes the program run a lot smoother and faster as there is no iteration required and there is now a constant amount of time it takes to find the button clicked on. So widgets make the program easier to add features and menus as well as make *PathMaker* more efficient in how it knows which button was clicked.
 
 ### Marking Components as Dirty
 
 As mentioned previously before the board and store a value known as dirty in order to know if a component needs to be redrawn. This is so the program doesn't waste time on drawing components that haven't changed from a previous iteration and therefore wouldn't change in appearance to the user if redrawn. SDL doesn't remove things every frame and when drawing something new it's simply drawn on top of what was previously there.
-This means that if a menu pops up when the menu is exited everything behind that menu needs to be marked as dirty in order to be drawn on top have the menu actually hidden from view of the user. This causes another issue where components may sometimes overlap, so as a result you need to check if the component is active/currently usable.
+This means that if a menu pops up when the menu is exited everything behind that menu needs to be marked as dirty in order to be drawn on top have the menu actually hidden from view of the user. This causes another issue where components may sometimes overlap, so as a result you need to check if the component is active/currently usable. Below you can see this where if a component is marked as drawn it will return early in it's draw function and not render the component again, at the end of the draw function the component marks itself as drawn and can be changed by hovering over the button for standard buttons or by moving or changing the size or text of the component necessitating it to be redrawn.
 
 ```rust
 fn draw<'a>(
@@ -78,7 +83,7 @@ fn draw<'a>(
             self.change_drawn(false);
             self.change_hover(hovering);
         }
-        if self.is_drawn() {
+        if self.is_drawn() { // If component is drawn don't render again.
             return;
         }
 
@@ -457,3 +462,47 @@ $$
 $$
 
 Another way to do this would be to just make sure the minimum number of tiles to reach the goal is always present, the problem with this is that it still runs into the problem of being extremely unlikely to find a possible board and even if a possible board is found, the resulting board wouldn't be representative of real life and wouldn't make algorithms make any decisions as the only tiles they can move to will always be the correct one.
+
+### Outputs
+
+```json
+{
+  "0": {
+    "wcf": [
+      0.9010537801054535
+    ],
+    "memory": [
+      4495208
+    ],
+    "time": [
+      {
+        "secs": 0,
+        "nanos": 151865279
+      }
+    ],
+    "steps": [
+      49521
+    ],
+    "path_cost": [
+      295545
+    ],
+    "avg_wcf": 0.9010537801054535,
+    "avg_memory": 4495208,
+    "avg_time": {
+      "secs": 0,
+      "nanos": 151865279
+    },
+    "avg_steps": 49521,
+    "avg_path_cost": 295545,
+    "total_memory": 4495208,
+    "total_time": {
+      "secs": 0,
+      "nanos": 151865279
+    },
+    "total_steps": 49521,
+    "total_path_cost": 295545
+  }
+}
+```
+
+The above example is what would be given as result of running the benchmarks in PathMaker, it gives the wcf value, the memory used in bytes,time,computational steps taken, overall path cost and then the averages which in this case are the same but would avg the results if there were multiple agents on the board.
