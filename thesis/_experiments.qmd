@@ -10,7 +10,7 @@ a typical st
 
 To analyze *PathMaker*'s ability to run different environments and different types of grids and get an accurate result. I set up a function with the following Parameters in order to generate different configurations to run experiments on.
 
-Table: Configuration Parameters
+Table 1: Configuration Parameters
 
 Variable|Description|Possible Values|
 |:----|:----|:----|
@@ -96,11 +96,20 @@ The grid generation tests verify that random and city-style maps are created acc
 
 ### Overall Avg for Different Grids
 
-**Random:**
-![Avg Random Grid](./images/Comp_Average_Random.png)
+\begin{figure}[h!]
+  \centering
+  \includegraphics{./images/Comp_Average_Random.png}
+  \caption{Random Grid Averages}
+  \label{fig:rg_avg}
+\end{figure}   
 
-**City:**
-![Avg City Grid](./images/Comp_Averages.png)
+\begin{figure}[h!]
+  \centering
+  \includegraphics{./images/Comp_Averages.png}
+  \caption{City Grid Averages}
+  \label{fig:cg_avg}
+\end{figure}   
+
 
 You can see on average A* has the lowest path cost, greedy is the most efficient when it comes to memory and speed, while JPSW has on average the highest memory cost. This is all to be expected and it's important to take into account that *greedy* and *breadth first search* don't account for weighted tiles like *A** and *JPSW* making them have significantly less calculations to worry about and they not worrying about path cost simply finding a path. Based on the results you may think that greedy is a great option for a lot of cases which is true but it's also important to keep in mind that greedy has a higher failure rate then the rest and was unable to complete as many grids as the other algorithms.
 
@@ -108,7 +117,12 @@ All of these are all features that are known about these algorithms and are impo
 
 ### Time and Memory Comparisons when taken WCF into account
 
-![WCF Plots](./images/WCF_TM_PLOTs.png)
+\begin{figure}[h!]
+  \centering
+  \includegraphics{./images/WCF_TM_PLOTs.png}
+  \caption{WCF plots City and Random}
+  \label{fig:wcf_tm}
+\end{figure}  
 
 Another goal of *PathMaker* is to be able to generate a wide array grids with varying complexities and to be able to compare algorithms based on grid complexity. Based on these plots of the data collected by *PathMaker* It can be used to make comparisons between algorithms is there and effective however the ability to generate grids of varying complexity is questionable especially when looking at randomized grids they are either a very low complexity or high complexity and almost no grids were generated 
 
@@ -140,11 +154,22 @@ Table: Code Coverage and Testing Results
 | util.rs                    | 370     | 1              | 99.73%  |
 | **TOTAL**                  | **12138**| **3638**      | **70.03%**|
 
+\begin{figure}[h!]
+  \centering
+  \caption{Code Coverage and Test Results}
+  \label{fig:table_coverage}
+\end{figure} 
+
 Overall the total coverage from unit testing is 70.03% covered. Coverage being how much of the code has been tested not how many of the tests passed. The components all hover around 70% covered as they also heavily rely on mouse clicks and buttons presses.
 
 **Test Results**
 
-![Test](./images/Test_R_Comp.png)
+\begin{figure}[h!]
+  \centering
+  \includegraphics{./images/Test_R_Comp.png}
+  \caption{Test Results}
+  \label{fig:t_results}
+\end{figure}   
 
 As for the actual tests themselves *PathMaker* Passes 358/358 of them showing that most if not all of the backend is working as intended as far as the tests can tell.
 
