@@ -154,12 +154,6 @@ Table: Code Coverage and Testing Results
 | util.rs                    | 370     | 1              | 99.73%  |
 | **TOTAL**                  | **12138**| **3638**      | **70.03%**|
 
-\begin{figure}[h!]
-  \centering
-  \caption{Code Coverage and Test Results}
-  \label{fig:table_coverage}
-\end{figure} 
-
 Overall the total coverage from unit testing is 70.03% covered. Coverage being how much of the code has been tested not how many of the tests passed. The components all hover around 70% covered as they also heavily rely on mouse clicks and buttons presses.
 
 **Test Results**

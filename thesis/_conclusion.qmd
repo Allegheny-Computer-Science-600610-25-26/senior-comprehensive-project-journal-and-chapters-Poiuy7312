@@ -4,7 +4,7 @@
 
 ### Accuracy
 
-Since PathMaker is primarily a benchmarking tool, it needs to be shown to be accurate and give expected results given the environments it was tested in. In this regard *PathMaker* has shown to be accurate with how it benchmarks algorithms as it shows similar results to previous studies and has behavior consistent with what is was shown in previous papers See figures [\ref{fig:rg_avg}][\ref{fig:cg_avg}][@OPFW]. The environment has been shown to be well tested and robust there is no sign of algorithms skipping spaces or looping endlessly[\ref{fig:t_result}][\ref{fig:table_coverage}]. 
+Since PathMaker is primarily a benchmarking tool, it needs to be shown to be accurate and give expected results given the environments it was tested in. In this regard *PathMaker* has shown to be accurate with how it benchmarks algorithms as it shows similar results to previous studies and has behavior consistent with what is was shown in previous papers See figures [\ref{fig:rg_avg}][\ref{fig:cg_avg}][@OPFW]. The environment has been shown to be well tested and robust there is no sign of algorithms skipping spaces or looping endlessly[\ref{fig:t_result}]. 
 
 ### Ease of Use
 
