@@ -1,9 +1,8 @@
 ---
-title: "Sample feedback post"
-date: "2025-08-29"
+title: "Feedback 600 course"
+date: "2025-012-10"
 ---
 
-![Image post thumbnail](thumbnail.jpg)
+**Classmates:** Generally I think it was mostly not explaining terms was the a consistent issue I noticed where a word or term would be stated but it wouldn't be explained what it mean't which could make the course hard to follow sometimes.
 
-This is a sample post in which students provide feedback on process or other prompts
-provided as part of class activities or assignments.
+**Instructors:** I think some of the feedback could sometimes be a little more descriptive as a lot of my feedback as it was written to informally but I would really only be given one example it wouldn't explain why the sentence was informal. Which makes it difficult to fix for someone not used to more formal writing. I also thing having like physical slides about when your supposed to do the posts and where you should be on your paper and artifact similar to last year is more helpful. I know the syllabus is kind of that. But I think a more formal schedule for somethings would be helpful.
