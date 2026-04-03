@@ -10,7 +10,7 @@ a typical st
 
 To analyze *PathMaker*'s ability to run different environments and different types of grids and get an accurate result. I set up a function with the following Parameters in order to generate different configurations to run experiments on.
 
-Table 1: Configuration Parameters
+Table: Configuration Parameters
 
 Variable|Description|Possible Values|
 |:----|:----|:----|
