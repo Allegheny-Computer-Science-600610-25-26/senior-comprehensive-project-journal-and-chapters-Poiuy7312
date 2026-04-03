@@ -4,46 +4,50 @@
 
 ### Accuracy
 
-*PathMaker* has shown to be accurate with how it benchmarks algorithms as it shows similar results to previous studies and has behavior consistent with what is known about the algorithms (Link to figure). The environment has been shown to be well tested and robust there is no sign of algorithms skipping spaces or looping endlessly. However one thing holding this aspect of *PathMaker* back is to properly generate grids of different complexities specifically with a fully random grid. It's either not very complex or very complex, this makes it difficult to see how it performs in situations with in the middle. While city grids do not struggle with this city grids can also only get so complex as they only have two different weight values on the grid, that being the road weight and terrain weight.
+Since PathMaker is primarily a benchmarking tool, it needs to be shown to be accurate and give expected results given the environments it was tested in. In this regard *PathMaker* has shown to be accurate with how it benchmarks algorithms as it shows similar results to previous studies and has behavior consistent with what is was shown in previous papers See figures [\ref{fig:rg_avg}][\ref{fig:cg_avg}][@OPFW]. The environment has been shown to be well tested and robust there is no sign of algorithms skipping spaces or looping endlessly[\ref{fig:t_result}][\ref{fig:table_coverage}]. 
 
 ### Ease of Use
 
-While the analytical abilities of *PathMaker* work and it can give in-depth benchmarks and analysis. The system in which the information is stored and presented is flawed. *PathMaker's* ease of use is questionable while actually using the tool is easy, getting information worth while and actually analyzing it still relies mostly on the user's abilities. For example pathmaker doesn't naturally compare different algorithms just the one chosen. So a user would have to run the program with different algorithms to compare, PathMaker currently saves the data as a json while usable they can be difficult to read and interpret. Finally Pathmaker doesn't graph the information itself this would be up to the user to do themselves which in of itself isn't an issue but due to storing information as a json that can make things more difficult. There is also no direct way for users to implement there own algorithms or modify existing ones. 
-
-### Final Thoughts
-
-*PathMaker* main goal was to make an easy to use tool for benchmarking and analyzing pathfinding algorithms, to help aid in research and game development. While I think this certainly can do that, it needs to be easier to use and have more features in order to really be useful. As it stands there isn't much user choice and while it gives an easy framework to build maps and test algorithms on them and it does give more in-depth benchmarks than other tools, it does not make this data easier to understand interpret or analyze by itself. Overall *PathMaker* is an incomplete tool as it stands and needs to add other features in order to completely fulfill it's goals of being easy to use and allowing for easy testing of pathfinding algorithms. There are many ways to improve pathmaker in the future to help achieve these goals.
+Another goal of PathMaker is to be easy to use and not require extensive set up. PathMaker is available on Windows,Linux and MacOS PathMaker also has an easy to use standalone environment where users can make maps and run algorithms on them, or generate maps extensively and run many different scenarios while collecting the results for each one. In this regard PathMaker succeeds as it can be run as a standalone binary on all supported systems and easy to run and get started with.
 
 ## Future Work
 
-### Scan maps in through pictures
+### Improving Data representation and User customization
 
-For example one of the main issues with PathMaker currently is that creating maps can be time consuming and clunky, If someone already has a map they want to test there is no way to directly upload it unless it was already made in PathMaker a way to improve this process is to have an ability to scan images of a maps environment and be able to convert that into a grid in *PathMaker*, this would significantly improve this process and make it much easier to test environments and create maps allowing people to leverage other tools to create maps easier than *PathMaker* can. 
+While the analytical abilities of *PathMaker* work and it can give in-depth benchmarks and analysis. The system in which the information is stored and presented is flawed. *PathMaker's* ease of use is questionable while actually using the tool is easy, getting information worth while and actually analyzing it still relies mostly on the user's abilities and other tools such as excel.
+
+#### Generating Graphs and Tables
+
+*PathMaker* doesn't currently have a good way to physically represent data with graphs and tables so feature to create graphs and tables from the benchmarking results could be useful to help a user visualize how it performed and to help them make an informed decision on what situations an algorithm should be used in or if there algorithm is effective, without having to use outside tools such as excel or R.
+
+#### Ability to select how the data is stored 
+
+Another issue with *PathMaker* is the way the data is formatted can be difficult to read and interpret so having the option to change how it's saved like in csv, which it can do but no way for a user to access that function would be useful and give the user more control on how they want things to be represented to them, it would also improve PathMakers synergy and ease of use with working with different tools, if the user decides that want to use a different tool to make graphs.
+
+#### Scan maps in through pictures or other file types
+
+For example one of the main issues with PathMaker currently is that creating maps can be time consuming and clunky, If someone already has a map they want to test there is no way to directly upload it unless it was already made in PathMaker a way to improve this process is to have an ability to scan images or other file types of a maps environment and be able to convert that into a grid in *PathMaker*, this would significantly improve this process and make it much easier to test environments and create maps allowing people to leverage other tools to create maps easier than *PathMaker* for example this would also allows users to use known benchmarking maps such as the Moving AI Repo[@sturtevant2012benchmarks] allowing to directly upload theses maps and run tests with them.
+
+#### More grid generation types
+
+PathMaker struggles to properly generate grids of different complexities specifically with a fully random grids[\ref{fig:wcf_tm}]. It's either not very complex or very complex, this makes it difficult to see how it performs in situations within the middle of the road. While city grids do not struggle with this city grids can also only get so complex as they only have two different weight values on the grid, that being the road weight and terrain weight. Currently there are only two types of grids the can be generated, a city map and completely random map. While these are a good start having something like a terrain map generator or maze generator would be useful and allow for more analyses in different situations as well giving PathMaker a more broad array of maps in terms of weight complexity.
 
 ### Custom Algorithm Implementation
 
-There is also the issue users can't easily implement there own custom algorithm while *PathMaker* is open source so users could install the repo and manually add it into the source-code, this isn't ideal and can be a lot of work. Ideally this is a feature within *PathMaker* where a user can upload a file with the code in it and it will be able to run and get benchmarks from it. So way to upload a file and run it and also have functions the user can use outside the tool to properly implement into *PathMaker*
+Users currently can't easily implement there own custom algorithm while *PathMaker* is open source so users could install the repo and manually add it into the source-code, this isn't ideal and can be a lot of work. Ideally this is a feature within *PathMaker* where a user can upload a file with the code in it and it will be able to run and get benchmarks from it. So a way to upload a file and run it and also have functions the user can use outside the tool to properly implement into *PathMaker*. This would give users more customization and allow them to set up the environment in the way the way the would expect it to run in whatever they would use an algorithm in.
+
+#### AI Integration
+
+AI integration would be another possible step, to give summaries of the benchmarking data or give suggestions on when an algorithm should be used. This wouldn't be a major part of the tool but it could help with making decisions by giving a summary of the data and providing input to the user on what it could mean. This would be something that could help but wouldn't be main focus and isn't neccesary for the use PathMaker but could be a possible avenue to take in the future
+
+### Improving ease of access and Use
+
+While PathMaker has shown to be accurate in what it
+However one thing holding this aspect of *PathMaker* back is to properly generate grids of different complexities specifically with a fully random grid. It's either not very complex or very complex, this makes it difficult to see how it performs in situations with in the middle. While city grids do not struggle with this city grids can also only get so complex as they only have two different weight values on the grid, that being the road weight and terrain weight.
 
 ### Web-assembly version of PathMaker
 
 In order to make *PathMaker* more available have less OS specific issues having a webassembly version that can be run on a users browser would be helpful and make it significantly easier to access as well as making it easier to run. Currently *PathMaker* get's flagged by the security systems on computers as it's from an unknown publisher and can't be verified a web assembly version wouldn't have an issue with this could be simply run on a person browser by going the url.
-
-### More grid generation types
-
-Currently there are only to types of grids the can be generated, a city map and completely random map. While these are a good start having something like a terrain map generator or maze generator would be useful and allow for more analyses in different situations.
-
-### Ability to select how the data is stored
-
-Another issue with *PathMaker* is the way the data is formatted can be difficult to read and interpret so having the option to change how it's saved like in csv, which it can do but no way for a user to access that function would be useful and give the user more control on how they want things to be represented to them.
-
-### AI Integration
-
-AI integration would be another possible step, to give summaries of the benchmarking data or give suggestions on when an algorithm should be used. This wouldn't be a major part of the tool but it could help with making decisions by giving a summary of the data and providing input to the user on what it could mean.
-
-### Generating Graphs and Tables
-
-*PathMaker* doesn't currently have a good way to physically represent data with graphs and tables so feature to create graphs and tables from the benchmarking results could be useful to help a user visualize how it performed and to help them make an informed decision on what situations an algorithm should be used in or if there algorithm is effective.
-
 
 ## Future Ethical Implications and Recommendations
 
@@ -54,3 +58,8 @@ As mentioned previously when talking about a web-assembly version, *PathMaker* i
 ### Difficulty testing on Multiple Operating System
 
 Currently as one person it's very difficult to properly test on different operating systems, while I have the ability to test on Linux and Windows easily, MacOS present a problem as not only does mac work significantly differently then linux and windows when it comes to how it interacts to SDL2 but it's also the hardest to test in verify due to most apple products being very proprietary and being difficult to have a virtual machine of a MacOS.
+
+
+## Final Thoughts
+
+*PathMaker* main goal was to make an easy to use tool for benchmarking and analyzing pathfinding algorithms, to help aid in research and game development. While I think this certainly can do that, it needs to be easier to use and have more features in order to really be useful. As it stands there isn't much user choice and while it gives an easy framework to build maps and test algorithms on them and it does give more in-depth benchmarks than other tools, it does not make this data easier to understand interpret or analyze by itself. Overall *PathMaker* is an incomplete tool as it stands and needs to add other features in order to completely fulfill it's goals of being easy to use and allowing for easy testing of pathfinding algorithms. There are many ways to improve pathmaker in the future to help achieve these goals.
