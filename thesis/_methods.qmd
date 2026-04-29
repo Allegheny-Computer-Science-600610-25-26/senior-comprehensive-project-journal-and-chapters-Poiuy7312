@@ -13,130 +13,6 @@ The grid system implemented in the *PathMaker* is based off of this pygame and i
 
 PathMaker has two main pieces being the UI and the Benchmarking components, The UI is used to change settings and update the board as well as create boards for the benchmarks to be run on and also to select how many times a benchmark should be run. I'm going to start by explaining the UI as it's the largest part of PathMaker despite being a secondary feature and not it's main purpose.
 
-## User Interface
-
-![*PathMaker* UI](images/PathMakerUI.png)
-
-### Components
-
-Most of the code for *PathMaker* is user interface the result of which you can see above, as this project doesn't use very many libraries or external crates to function. This implementation solely relies on SDL2 as mentioned in previous chapters. This means that things such as buttons, sliders, text boxes, dropdown menus and checkboxes all needed to be implemented manually. These were all originally separately programmed and didn't share any common traits. This made it very difficult to add new features and modify existing ones. This is where the component trait comes in. All of these items are very similar in there structure and functions they may just display differently or in the case of dropdown menu uses the standard button within it's code. All of these share a trait which in rust is a shared characteristic or function that everything with that trait must implement. This allows for *PathMaker* to iterate through a list or vector as there called in rust with items that have multiple types as while you can't have a vector or data container with multiple types such as a list of strings and integers, with traits you can have the list be dynamically typed and you can have vector of things that have the same trait. This allows the compiler to know what to expect so since everything with the component trait has a draw function with the same arguments and return type. I can iterate through that vector and call the draw function. This makes it a lot easier to track user inputs and clicks instead of having to separate a standard button from a dropdown they can all be stored with in the same container and checked iteratively since everything with component trait has an on click function. This leads into a bit higher level implementation of these items.
-
-#### Complex Components and Interface
-
-There are more complex interface components such as a file explorer or dropdown that may have other components stored within them and have vastly different functionality then something like a checkbox or standard button.
-
-##### Sliders 
-
-Sliders allow for a controlled numbered input for allowing users to control things such as the weight of specific tiles or the range of weights that program generates when generating a board. This allows for a much more controllable input then something like a text input where a user can type what the value they want. This allows *PathMaker* to put limits on what can be inputed and lowers the possibilite of errors if they aren't properly handled if an invalid or unexpected input is giving. But there are Input boxes that users can type in select circumstances.
-
-##### Input Box
-
-Input boxes are simply components where a user can type information into and it saves what is typed. These are mostly used in the file explorer in order to be able to jump to a location in a users computer without having to click through a ton of buttons. These work by when they are clicked_on they are considered active and it activates SDL's built in text-input subsystem allowing things to be typed. Then when a user presses enter it deactivates and depending on the purpose of that Input box act accordingly.
-
-##### File Explorer
-
-In order for users to be able to save and select files for use in *PathMaker* it needed to have a way to retrieve the files from computers. Usually an easy way to do this is to use a computers built in file explorer, however as most of development of *PathMaker* uses WSL or Windows Subsystem for Linux. This caused issues with opening the proper file explorer and trying to retrieve files from a part of the computer that doesn't use the same path conventions and the program not being able to properly get what operating system the computer uses. So instead *PathMaker* has it's own file explorer that walks through a users files before running and splits them into a Hashmap with each key, value pair having the path to that location and any children so files or other directories that are located within the part of the computer. At first the file explorer just displayed every single file at once and would have a dropdown for directories to get to more files. This caused major performance issues because of how many files the program would have to render at once so in order to fix this it now uses the hashmap as said before and which ever directory is currently the set display it displays the children of that key and if it's a directory it's changes the key and displays that directories children then if it's a file it attempts to retrieve the information of that file. In order to speed up loading times it only starts with the root directory of the user and then when clicking on a directory it will then get the children of the directory and adding it to the hashmap this removes the need to get every file on a users system and instead opting to only load the files explored.
-
-### Widgets
-
-While being able to draw and check if something is clicked on easily was solved by the component and interface traits respectively. There was another issue on how the UI is formatted and what are the size of the buttons where do they appear on the screen how to they react to the window size changing. This is where widgets come in, widgets are like a container for the interface components similar to something like a flex box or grid in HTML. These allow for easy implementation of new UI components and menus as you can set the overall size of the widget and location. Give it a vector of components and where you want them to formatted within the widget and widgets will calculate the size, location and layout of all of them allowing for things to be easily grouped together and well formatted and also allowing for a more reactive UI for different screen sizes.
-
-Widgets also make checking which button is clicked easier. This is because widgets format things by taking how many rows and columns it needs to be formatted it in, so if I give the format information and it's two cells high and three cells wide it will divide those by the widgets height and width to know how large each cell in the widget is. It then makes a hashmap based on the location of these cells with a value of which interface component is associated or located within that cell. Since every cell is the same height and width you can calculate what is the origin location of the cell or the top left corner of it and immediately know witch component was clicked on without having to iterate through everyone and seeing the mouse location is within there specified bounds.
-
-```rust
-let rows = self.layout.len() as u32; // Get number of rows
-let cols = self.layout[0].len() as u32; // Get number of columns
-let cell_height = self.height / rows as u32; // Get the cell height for the widget
-let relative_x = mouse_state.x() - self.location.x(); // get mouse position x in comparison to widget location
-let relative_y = mouse_state.y() - self.location.y(); // get mouse position y in comparison to widget location
-
-if relative_x < 0 || relative_y < 0 {
-  return result; // Checks if mouse is within the widgets bounds
-}
-
-let cell_x = relative_x / cell_width as i32; // Gets the cell x the mouse position corresponds too
-let cell_y = relative_y / cell_height as i32;  // Gets the cell y the mouse position corresponds too
-
-if cell_x >= cols as i32 || cell_y >= rows as i32 {
-  return result;  // Checks if mouse is within the widgets bounds
-}
-let pos: (i32, i32) = (cell_x, cell_y);
-```
-
-This makes the program run a lot smoother and faster as there is no iteration required and there is now a constant amount of time it takes to find the button clicked on. So widgets make the program easier to add features and menus as well as make *PathMaker* more efficient in how it knows which button was clicked.
-
-### Marking Components as Dirty
-
-As mentioned previously before the board and store a value known as dirty in order to know if a component needs to be redrawn. This is so the program doesn't waste time on drawing components that haven't changed from a previous iteration and therefore wouldn't change in appearance to the user if redrawn. SDL doesn't remove things every frame and when drawing something new it's simply drawn on top of what was previously there.
-This means that if a menu pops up when the menu is exited everything behind that menu needs to be marked as dirty in order to be drawn on top have the menu actually hidden from view of the user. This causes another issue where components may sometimes overlap, so as a result you need to check if the component is active/currently usable. Below you can see this where if a component is marked as drawn it will return early in it's draw function and not render the component again, at the end of the draw function the component marks itself as drawn and can be changed by hovering over the button for standard buttons or by moving or changing the size or text of the component necessitating it to be redrawn.
-
-```rust
-fn draw<'a>(
-        &self,
-        canvas: &mut Canvas<Window>,
-        texture_creator: &'a TextureCreator<WindowContext>,
-        mouse_position: Point,
-        font: &mut ttf::Font<'_, 'static>,
-    ) {
-        let hovering = self.mouse_over_component(mouse_position);
-        if self.is_hovering() != hovering {
-            self.change_drawn(false);
-            self.change_hover(hovering);
-        }
-        if self.is_drawn() { // If component is drawn don't render again.
-            return;
-        }
-
-        // Draw code here
-}
-```
-
-### Checking if a component is active
-
-Each component also has an active value which similar to dirty is either true or false. Since SDL simply draws things on top of others and doesn't actually remove things from the window. Lets say I'm on the base menu and I wan't to save file when I click save file it loads a different menu but that menu is location above the board so if the board wasn't deactivated the program would think the board was being clicked an update accordingly despite the part being clicked on not being visible to the user. So to solve this components don't react to being clicked on unless they are considered active.
-
-```rust
-fn on_click(&mut self, mouse_position: Point) -> (bool, Option<String>) {
-        return (
-            self.mouse_over_component(mouse_position),
-            Some(self.get_id()),
-        );
-    }
-
-    fn mouse_over_component(&self, mouse_position: Point) -> bool {
-        let component: Rect = self.get_rect(self.location);
-        return component.contains_point(mouse_position) && self.active;
-    }
-```
-
-### Storing component information after first draw
-
-In many of the component there is something that says something like `pub cached_texture: Option<Texture<'static>>` or `cached_rectangle: Option<Rect>`. Once a component is drawn it may cache some of the information computed by the draw function so it doesn't have to be computed later unless necessary so if the texture for the text displayed on a button has already been created it won't have to be computed again unless it changes or in the case of tile or gameboard storing the the rectangle that is used to draw them so it doesn't need to be computed again unless it's location or size changes. The gameboard also caches grid information as the grid is set up by the board and has to be computed leading to code that looks something like this.
-
-```rust
-fn ensure_grid(&self) {
-    if self.cached_grid.borrow().is_some() {
-        return;
-    }
-    let size: usize = (self.tile_amount_x * self.tile_amount_y) as usize;
-    let mut grid = Vec::with_capacity(size);
-    let tile_width = self.tile_width();
-    let tile_height = self.tile_height();
-    for tile in 0..size {
-        let num: u8 = 1;
-        grid.push(Tile::new(
-            util::get_coordinate_from_idx(tile, self.tile_amount_x, self.tile_amount_y),
-            TileType::Floor,
-            tile_height,
-            tile_width,
-            num,
-            true,
-             WHITE,
-        ));
-    }
-    self.cached_grid.borrow_mut().replace(grid);
-}
-```
 
 ### The Game Board
 
@@ -333,9 +209,11 @@ Movement cost between two tiles is computed as a weighted average of their terra
 
 #### Search Procedure
 
-The main search maintains a min-heap prioritized by f-score (g + heuristic). We store g-scores, parent pointers, and a closed set. At each iteration, we pop the node with lowest f-score, compute pruned successors via the neighborhood analysis, then jump in each direction to identify the next waypoint. If the new g-score improves on a previously visited position, we update its parent and push it to the heap.
+The main search maintains a min-heap prioritized by f-score (g + heuristic). We store g-scores, parent pointers, and a closed set. At each iteration, we pop the node with lowest f-score, compute pruned successors via the neighborhood analysis, then jump in each direction to identify the next waypoint. If the new g-score improves on a previously visited position, we update its parent and push it to the heap. 
 
-The heuristic uses diagonal distance: 
+The heuristic uses diagonal distance:
+
+**d** = total manhattan distance.
 $$ 
 \text{diagonal distance} = d × \sqrt{2} + (\text{max(dx, dy)} - \text{d}), \text{where d} = 
 \text{min(|dx|, |dy|)}
@@ -506,3 +384,128 @@ Another way to do this would be to just make sure the minimum number of tiles to
 ```
 
 The above example is what would be given as result of running the benchmarks in PathMaker, it gives the wcf value, the memory used in bytes,time,computational steps taken, overall path cost and then the averages which in this case are the same but would avg the results if there were multiple agents on the board.
+
+## User Interface
+
+![*PathMaker* UI](images/PathMakerUI.png)
+
+### Components
+
+Most of the code for *PathMaker* is user interface the result of which you can see above, as this project doesn't use very many libraries or external crates to function. This implementation solely relies on SDL2 as mentioned in previous chapters. This means that things such as buttons, sliders, text boxes, dropdown menus and checkboxes all needed to be implemented manually. These were all originally separately programmed and didn't share any common traits. This made it very difficult to add new features and modify existing ones. This is where the component trait comes in. All of these items are very similar in there structure and functions they may just display differently or in the case of dropdown menu uses the standard button within it's code. All of these share a trait which in rust is a shared characteristic or function that everything with that trait must implement. This allows for *PathMaker* to iterate through a list or vector as there called in rust with items that have multiple types as while you can't have a vector or data container with multiple types such as a list of strings and integers, with traits you can have the list be dynamically typed and you can have vector of things that have the same trait. This allows the compiler to know what to expect so since everything with the component trait has a draw function with the same arguments and return type. I can iterate through that vector and call the draw function. This makes it a lot easier to track user inputs and clicks instead of having to separate a standard button from a dropdown they can all be stored with in the same container and checked iteratively since everything with component trait has an on click function. This leads into a bit higher level implementation of these items.
+
+#### Complex Components and Interface
+
+There are more complex interface components such as a file explorer or dropdown that may have other components stored within them and have vastly different functionality then something like a checkbox or standard button.
+
+##### Sliders 
+
+Sliders allow for a controlled numbered input for allowing users to control things such as the weight of specific tiles or the range of weights that program generates when generating a board. This allows for a much more controllable input then something like a text input where a user can type what the value they want. This allows *PathMaker* to put limits on what can be inputed and lowers the possibilite of errors if they aren't properly handled if an invalid or unexpected input is giving. But there are Input boxes that users can type in select circumstances.
+
+##### Input Box
+
+Input boxes are simply components where a user can type information into and it saves what is typed. These are mostly used in the file explorer in order to be able to jump to a location in a users computer without having to click through a ton of buttons. These work by when they are clicked_on they are considered active and it activates SDL's built in text-input subsystem allowing things to be typed. Then when a user presses enter it deactivates and depending on the purpose of that Input box act accordingly.
+
+##### File Explorer
+
+In order for users to be able to save and select files for use in *PathMaker* it needed to have a way to retrieve the files from computers. Usually an easy way to do this is to use a computers built in file explorer, however as most of development of *PathMaker* uses WSL or Windows Subsystem for Linux. This caused issues with opening the proper file explorer and trying to retrieve files from a part of the computer that doesn't use the same path conventions and the program not being able to properly get what operating system the computer uses. So instead *PathMaker* has it's own file explorer that walks through a users files before running and splits them into a Hashmap with each key, value pair having the path to that location and any children so files or other directories that are located within the part of the computer. At first the file explorer just displayed every single file at once and would have a dropdown for directories to get to more files. This caused major performance issues because of how many files the program would have to render at once so in order to fix this it now uses the hashmap as said before and which ever directory is currently the set display it displays the children of that key and if it's a directory it's changes the key and displays that directories children then if it's a file it attempts to retrieve the information of that file. In order to speed up loading times it only starts with the root directory of the user and then when clicking on a directory it will then get the children of the directory and adding it to the hashmap this removes the need to get every file on a users system and instead opting to only load the files explored.
+
+### Widgets
+
+While being able to draw and check if something is clicked on easily was solved by the component and interface traits respectively. There was another issue on how the UI is formatted and what are the size of the buttons where do they appear on the screen how to they react to the window size changing. This is where widgets come in, widgets are like a container for the interface components similar to something like a flex box or grid in HTML. These allow for easy implementation of new UI components and menus as you can set the overall size of the widget and location. Give it a vector of components and where you want them to formatted within the widget and widgets will calculate the size, location and layout of all of them allowing for things to be easily grouped together and well formatted and also allowing for a more reactive UI for different screen sizes.
+
+Widgets also make checking which button is clicked easier. This is because widgets format things by taking how many rows and columns it needs to be formatted it in, so if I give the format information and it's two cells high and three cells wide it will divide those by the widgets height and width to know how large each cell in the widget is. It then makes a hashmap based on the location of these cells with a value of which interface component is associated or located within that cell. Since every cell is the same height and width you can calculate what is the origin location of the cell or the top left corner of it and immediately know witch component was clicked on without having to iterate through everyone and seeing the mouse location is within there specified bounds.
+
+```rust
+let rows = self.layout.len() as u32; // Get number of rows
+let cols = self.layout[0].len() as u32; // Get number of columns
+let cell_height = self.height / rows as u32; // Get the cell height for the widget
+let relative_x = mouse_state.x() - self.location.x(); // get mouse position x in comparison to widget location
+let relative_y = mouse_state.y() - self.location.y(); // get mouse position y in comparison to widget location
+
+if relative_x < 0 || relative_y < 0 {
+  return result; // Checks if mouse is within the widgets bounds
+}
+
+let cell_x = relative_x / cell_width as i32; // Gets the cell x the mouse position corresponds too
+let cell_y = relative_y / cell_height as i32;  // Gets the cell y the mouse position corresponds too
+
+if cell_x >= cols as i32 || cell_y >= rows as i32 {
+  return result;  // Checks if mouse is within the widgets bounds
+}
+let pos: (i32, i32) = (cell_x, cell_y);
+```
+
+This makes the program run a lot smoother and faster as there is no iteration required and there is now a constant amount of time it takes to find the button clicked on. So widgets make the program easier to add features and menus as well as make *PathMaker* more efficient in how it knows which button was clicked.
+
+### Marking Components as Dirty
+
+As mentioned previously before the board and store a value known as dirty in order to know if a component needs to be redrawn. This is so the program doesn't waste time on drawing components that haven't changed from a previous iteration and therefore wouldn't change in appearance to the user if redrawn. SDL doesn't remove things every frame and when drawing something new it's simply drawn on top of what was previously there.
+This means that if a menu pops up when the menu is exited everything behind that menu needs to be marked as dirty in order to be drawn on top have the menu actually hidden from view of the user. This causes another issue where components may sometimes overlap, so as a result you need to check if the component is active/currently usable. Below you can see this where if a component is marked as drawn it will return early in it's draw function and not render the component again, at the end of the draw function the component marks itself as drawn and can be changed by hovering over the button for standard buttons or by moving or changing the size or text of the component necessitating it to be redrawn.
+
+```rust
+fn draw<'a>(
+        &self,
+        canvas: &mut Canvas<Window>,
+        texture_creator: &'a TextureCreator<WindowContext>,
+        mouse_position: Point,
+        font: &mut ttf::Font<'_, 'static>,
+    ) {
+        let hovering = self.mouse_over_component(mouse_position);
+        if self.is_hovering() != hovering {
+            self.change_drawn(false);
+            self.change_hover(hovering);
+        }
+        if self.is_drawn() { // If component is drawn don't render again.
+            return;
+        }
+
+        // Draw code here
+}
+```
+
+### Checking if a component is active
+
+Each component also has an active value which similar to dirty is either true or false. Since SDL simply draws things on top of others and doesn't actually remove things from the window. Lets say I'm on the base menu and I wan't to save file when I click save file it loads a different menu but that menu is location above the board so if the board wasn't deactivated the program would think the board was being clicked an update accordingly despite the part being clicked on not being visible to the user. So to solve this components don't react to being clicked on unless they are considered active.
+
+```rust
+fn on_click(&mut self, mouse_position: Point) -> (bool, Option<String>) {
+        return (
+            self.mouse_over_component(mouse_position),
+            Some(self.get_id()),
+        );
+    }
+
+    fn mouse_over_component(&self, mouse_position: Point) -> bool {
+        let component: Rect = self.get_rect(self.location);
+        return component.contains_point(mouse_position) && self.active;
+    }
+```
+
+### Storing component information after first draw
+
+In many of the component there is something that says something like `pub cached_texture: Option<Texture<'static>>` or `cached_rectangle: Option<Rect>`. Once a component is drawn it may cache some of the information computed by the draw function so it doesn't have to be computed later unless necessary so if the texture for the text displayed on a button has already been created it won't have to be computed again unless it changes or in the case of tile or gameboard storing the the rectangle that is used to draw them so it doesn't need to be computed again unless it's location or size changes. The gameboard also caches grid information as the grid is set up by the board and has to be computed leading to code that looks something like this.
+
+```rust
+fn ensure_grid(&self) {
+    if self.cached_grid.borrow().is_some() {
+        return;
+    }
+    let size: usize = (self.tile_amount_x * self.tile_amount_y) as usize;
+    let mut grid = Vec::with_capacity(size);
+    let tile_width = self.tile_width();
+    let tile_height = self.tile_height();
+    for tile in 0..size {
+        let num: u8 = 1;
+        grid.push(Tile::new(
+            util::get_coordinate_from_idx(tile, self.tile_amount_x, self.tile_amount_y),
+            TileType::Floor,
+            tile_height,
+            tile_width,
+            num,
+            true,
+             WHITE,
+        ));
+    }
+    self.cached_grid.borrow_mut().replace(grid);
+}
+```
